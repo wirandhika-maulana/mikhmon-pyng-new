@@ -57,6 +57,48 @@ if (isset($_POST['action']) && $_POST['action'] == 'add') {
 	exit;
 }
 
+// Handle edit preset
+if (isset($_POST['action']) && $_POST['action'] == 'edit') {
+	$editId = $_POST['id'];
+	$name = trim($_POST['name']);
+	$profile = trim($_POST['profile']);
+	$qty = intval($_POST['qty']);
+	$prefix = trim($_POST['prefix']);
+	$server = isset($_POST['server']) ? trim($_POST['server']) : 'all';
+	$usermode = isset($_POST['usermode']) ? trim($_POST['usermode']) : 'vc';
+	$userlength = isset($_POST['userlength']) ? intval($_POST['userlength']) : 5;
+	$char = isset($_POST['char']) ? trim($_POST['char']) : 'mix1';
+
+	if ($name == '' || $profile == '' || $qty < 1 || $editId == '') {
+		echo json_encode(array('status' => 'error', 'message' => 'Data tidak lengkap'));
+		exit;
+	}
+
+	$found = false;
+	foreach ($genData as &$preset) {
+		if ($preset['id'] == $editId) {
+			$preset['name'] = $name;
+			$preset['profile'] = $profile;
+			$preset['qty'] = $qty;
+			$preset['prefix'] = $prefix;
+			$preset['server'] = $server;
+			$preset['usermode'] = $usermode;
+			$preset['userlength'] = $userlength;
+			$preset['char'] = $char;
+			$found = true;
+			break;
+		}
+	}
+
+	if ($found) {
+		file_put_contents($quickGenFile, json_encode($genData, JSON_PRETTY_PRINT));
+		echo json_encode(array('status' => 'success', 'data' => $genData));
+	} else {
+		echo json_encode(array('status' => 'error', 'message' => 'Preset tidak ditemukan'));
+	}
+	exit;
+}
+
 // Handle delete preset
 if (isset($_POST['action']) && $_POST['action'] == 'delete') {
 	$deleteId = $_POST['id'];

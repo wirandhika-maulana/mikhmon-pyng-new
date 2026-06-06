@@ -346,7 +346,8 @@ date_default_timezone_set($_SESSION['timezone']);
 			?>
 			<div class="quick-gen-item" style="position: relative; background: linear-gradient(135deg, #ffffff, #f8f9fa); border: 2px solid #6f42c1; border-radius: 12px; padding: 15px; min-width: 220px; max-width: 300px; box-shadow: 0 3px 10px rgba(111, 66, 193, 0.15); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(111, 66, 193, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(111, 66, 193, 0.15)';">
 				<button type="button" onclick="deleteQuickGen('<?= $preset['id'] ?>', this);" style="position: absolute; top: 8px; right: 8px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; line-height: 1;" onmouseover="this.style.backgroundColor='#c82333'; this.style.transform='scale(1.2)';" onmouseout="this.style.backgroundColor='#dc3545'; this.style.transform='scale(1)';" title="Hapus preset"><i class="fa fa-times"></i></button>
-				<div style="font-weight: 700; font-size: 14px; color: #6f42c1; margin-bottom: 8px; padding-right: 20px;"><?= htmlspecialchars($preset['name']) ?></div>
+				<button type="button" onclick='editQuickGen(<?= htmlspecialchars(json_encode($preset)) ?>);' style="position: absolute; top: 8px; right: 35px; background: #007bff; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; line-height: 1;" onmouseover="this.style.backgroundColor='#0056b3'; this.style.transform='scale(1.2)';" onmouseout="this.style.backgroundColor='#007bff'; this.style.transform='scale(1)';" title="Edit preset"><i class="fa fa-pencil"></i></button>
+				<div style="font-weight: 700; font-size: 14px; color: #6f42c1; margin-bottom: 8px; padding-right: 50px;"><?= htmlspecialchars($preset['name']) ?></div>
 				<div style="font-size: 12px; color: #666; margin-bottom: 4px;"><i class="fa fa-tag" style="width: 16px; color: #17a2b8;"></i> <?= htmlspecialchars($preset['profile']) ?></div>
 				<div style="font-size: 12px; color: #666; margin-bottom: 4px;"><i class="fa fa-users" style="width: 16px; color: #28a745;"></i> Qty: <strong><?= $preset['qty'] ?></strong></div>
 				<?php if ($preset['prefix']) { ?>
@@ -373,9 +374,10 @@ date_default_timezone_set($_SESSION['timezone']);
 		<div id="addPresetForm" style="display: none; margin-top: 15px;">
 			<div class="card" style="border: 2px solid #6f42c1; border-radius: 10px;">
 				<div class="card-header" style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 12px 15px; border-radius: 8px 8px 0 0;">
-					<h5 style="margin: 0; font-weight: 600;"><i class="fa fa-plus-circle"></i> Tambah Preset Baru</h5>
+					<h5 id="presetFormTitle" style="margin: 0; font-weight: 600;"><i class="fa fa-plus-circle"></i> Tambah Preset Baru</h5>
 				</div>
 				<div class="card-body" style="padding: 15px;">
+					<input type="hidden" id="presetId" value="">
 					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
 						<div>
 							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Nama Preset *</label>
@@ -890,7 +892,15 @@ function toggleQuickGen() {
 function toggleAddPreset() {
   var form = document.getElementById('addPresetForm');
   var btn = document.getElementById('btnShowAddPreset');
+  
   if (form.style.display === 'none') {
+    // Reset form for adding new
+    document.getElementById('presetId').value = '';
+    document.getElementById('presetFormTitle').innerHTML = '<i class="fa fa-plus-circle"></i> Tambah Preset Baru';
+    document.getElementById('presetName').value = '';
+    document.getElementById('presetQty').value = '50';
+    document.getElementById('presetReseller').value = '';
+    
     form.style.display = 'block';
     form.style.opacity = '0';
     form.style.transition = 'opacity 0.3s ease';
@@ -903,7 +913,37 @@ function toggleAddPreset() {
   }
 }
 
+function editQuickGen(preset) {
+  // Show form if hidden
+  var form = document.getElementById('addPresetForm');
+  var btn = document.getElementById('btnShowAddPreset');
+  
+  if (form.style.display === 'none') {
+    form.style.display = 'block';
+    form.style.opacity = '1';
+    btn.style.display = 'none';
+  }
+  
+  // Update title and set hidden ID
+  document.getElementById('presetFormTitle').innerHTML = '<i class="fa fa-edit"></i> Edit Preset';
+  document.getElementById('presetId').value = preset.id;
+  
+  // Fill fields
+  document.getElementById('presetName').value = preset.name;
+  document.getElementById('presetProfile').value = preset.profile;
+  document.getElementById('presetQty').value = preset.qty;
+  document.getElementById('presetReseller').value = preset.prefix || '';
+  document.getElementById('presetServer').value = preset.server || 'all';
+  document.getElementById('presetUsermode').value = preset.usermode || 'vc';
+  document.getElementById('presetUserlength').value = preset.userlength || '5';
+  document.getElementById('presetChar').value = preset.char || 'mix1';
+  
+  // Scroll to form smoothly
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function saveQuickGenPreset() {
+  var id = document.getElementById('presetId').value;
   var name = document.getElementById('presetName').value.trim();
   var profile = document.getElementById('presetProfile').value;
   var qty = document.getElementById('presetQty').value;
@@ -918,6 +958,18 @@ function saveQuickGenPreset() {
     return;
   }
 
+  var actionType = id ? 'edit' : 'add';
+  var dataStr = 'action=' + actionType + 
+                (id ? '&id=' + encodeURIComponent(id) : '') +
+                '&name=' + encodeURIComponent(name) + 
+                '&profile=' + encodeURIComponent(profile) + 
+                '&qty=' + qty + 
+                '&prefix=' + encodeURIComponent(prefix) + 
+                '&server=' + encodeURIComponent(server) + 
+                '&usermode=' + encodeURIComponent(usermode) + 
+                '&userlength=' + userlength + 
+                '&char=' + encodeURIComponent(charType);
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', './process/quickgen.php', true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -931,7 +983,7 @@ function saveQuickGenPreset() {
       }
     }
   };
-  xhr.send('action=add&name=' + encodeURIComponent(name) + '&profile=' + encodeURIComponent(profile) + '&qty=' + qty + '&prefix=' + encodeURIComponent(prefix) + '&server=' + encodeURIComponent(server) + '&usermode=' + encodeURIComponent(usermode) + '&userlength=' + userlength + '&char=' + encodeURIComponent(charType));
+  xhr.send(dataStr);
 }
 
 function deleteQuickGen(id, btn) {
