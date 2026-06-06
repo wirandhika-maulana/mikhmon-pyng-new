@@ -378,12 +378,12 @@ date_default_timezone_set($_SESSION['timezone']);
 				<div class="card-body" style="padding: 15px;">
 					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Nama Preset *</label>
-							<input type="text" id="presetName" placeholder="e.g., RGS - 12 Jam x50" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Nama Preset *</label>
+							<input type="text" id="presetName" placeholder="e.g., RGS - 12 Jam x50" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Profile *</label>
-							<select id="presetProfile" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Profile *</label>
+							<select id="presetProfile" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 								<?php 
 								$TotalProf = count($getprofile);
 								for ($i = 0; $i < $TotalProf; $i++) {
@@ -393,12 +393,12 @@ date_default_timezone_set($_SESSION['timezone']);
 							</select>
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Qty *</label>
-							<input type="number" id="presetQty" min="1" max="500" value="50" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Qty *</label>
+							<input type="number" id="presetQty" min="1" max="500" value="50" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Reseller</label>
-							<select id="presetReseller" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Reseller</label>
+							<select id="presetReseller" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 								<option value="">-- Tanpa Reseller --</option>
 								<?php 
 								if (is_array($resellerData) && count($resellerData) > 0) {
@@ -410,8 +410,8 @@ date_default_timezone_set($_SESSION['timezone']);
 							</select>
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Server</label>
-							<select id="presetServer" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Server</label>
+							<select id="presetServer" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 								<option value="all">all</option>
 								<?php 
 								$TotalSrv = count($srvlist);
@@ -422,24 +422,24 @@ date_default_timezone_set($_SESSION['timezone']);
 							</select>
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">User Mode</label>
-							<select id="presetUsermode" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">User Mode</label>
+							<select id="presetUsermode" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 								<option value="vc">User=Password (Voucher)</option>
 								<option value="up">User &amp; Password</option>
 							</select>
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">User Length</label>
-							<select id="presetUserlength" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
-								<option value="3">3</option>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">User Length</label>
+							<select id="presetUserlength" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
+								<option value="3" selected>3</option>
 								<option value="4">4</option>
-								<option value="5" selected>5</option>
+								<option value="5">5</option>
 								<option value="6">6</option>
 							</select>
 						</div>
 						<div>
-							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Character</label>
-							<select id="presetChar" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: inherit;">Character</label>
+							<select id="presetChar" class="form-control" style="border-radius: 6px; padding: 8px 12px;">
 								<option value="mix1">Random 5AB2C34D</option>
 								<option value="lower">Random abcd</option>
 								<option value="upper">Random ABCD</option>
