@@ -88,6 +88,16 @@ date_default_timezone_set($_SESSION['timezone']);
 	);
 	$currentBulan = $bulanIndo[(int)date('n')];
 
+	// Load quick generate presets
+	$quickGenFile = './voucher/quickgen.json';
+	$quickGenData = array();
+	if (file_exists($quickGenFile)) {
+		$tmpGen = json_decode(file_get_contents($quickGenFile), true);
+		if (is_array($tmpGen)) {
+			$quickGenData = $tmpGen;
+		}
+	}
+
 	if (isset($_POST['qty'])) {
 		
 		$qty = ($_POST['qty']);
@@ -311,6 +321,150 @@ date_default_timezone_set($_SESSION['timezone']);
 
 }
 ?>
+<!-- Quick Generate Panel -->
+<div class="row" style="margin-bottom: 15px;">
+<div class="col-12">
+<div class="card" style="border: 2px solid #6f42c1; border-radius: 10px; overflow: hidden;">
+	<div class="card-header" style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; padding: 12px 20px; cursor: pointer;" onclick="toggleQuickGen();">
+		<h3 style="margin: 0; display: flex; align-items: center; justify-content: space-between;">
+			<span><i class="fa fa-bolt"></i> Quick Generate</span>
+			<i class="fa fa-chevron-down" id="quickGenChevron" style="transition: transform 0.3s ease;"></i>
+		</h3>
+	</div>
+	<div class="card-body" id="quickGenBody" style="display: none; padding: 15px;">
+		<?php if (count($quickGenData) > 0) { ?>
+		<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+			<?php foreach ($quickGenData as $preset) { 
+				// Find reseller name by prefix
+				$resellerName = $preset['prefix'];
+				foreach ($resellerData as $res) {
+					if ($res['prefix'] == $preset['prefix']) {
+						$resellerName = $res['name'] . ' (' . $res['prefix'] . ')';
+						break;
+					}
+				}
+			?>
+			<div class="quick-gen-item" style="position: relative; background: linear-gradient(135deg, #ffffff, #f8f9fa); border: 2px solid #6f42c1; border-radius: 12px; padding: 15px; min-width: 220px; max-width: 300px; box-shadow: 0 3px 10px rgba(111, 66, 193, 0.15); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(111, 66, 193, 0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(111, 66, 193, 0.15)';">
+				<button type="button" onclick="deleteQuickGen('<?= $preset['id'] ?>', this);" style="position: absolute; top: 8px; right: 8px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; line-height: 1;" onmouseover="this.style.backgroundColor='#c82333'; this.style.transform='scale(1.2)';" onmouseout="this.style.backgroundColor='#dc3545'; this.style.transform='scale(1)';" title="Hapus preset"><i class="fa fa-times"></i></button>
+				<div style="font-weight: 700; font-size: 14px; color: #6f42c1; margin-bottom: 8px; padding-right: 20px;"><?= htmlspecialchars($preset['name']) ?></div>
+				<div style="font-size: 12px; color: #666; margin-bottom: 4px;"><i class="fa fa-tag" style="width: 16px; color: #17a2b8;"></i> <?= htmlspecialchars($preset['profile']) ?></div>
+				<div style="font-size: 12px; color: #666; margin-bottom: 4px;"><i class="fa fa-users" style="width: 16px; color: #28a745;"></i> Qty: <strong><?= $preset['qty'] ?></strong></div>
+				<?php if ($preset['prefix']) { ?>
+				<div style="font-size: 12px; color: #666; margin-bottom: 10px;"><i class="fa fa-store" style="width: 16px; color: #e83e8c;"></i> <?= htmlspecialchars($resellerName) ?></div>
+				<?php } else { ?>
+				<div style="font-size: 12px; color: #999; margin-bottom: 10px;"><i class="fa fa-store" style="width: 16px; color: #ccc;"></i> Tanpa Reseller</div>
+				<?php } ?>
+				<button type="button" class="btn" onclick="executeQuickGen(<?= htmlspecialchars(json_encode($preset)) ?>);" style="width: 100%; background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; border: none; border-radius: 8px; padding: 10px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 6px rgba(111, 66, 193, 0.3);" onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 4px 12px rgba(111, 66, 193, 0.5)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 6px rgba(111, 66, 193, 0.3)';">
+					<i class="fa fa-bolt"></i> Generate Sekarang
+				</button>
+			</div>
+			<?php } ?>
+		</div>
+		<hr style="border-color: #e0e0e0;">
+		<?php } else { ?>
+		<p style="color: #999; font-style: italic; margin-bottom: 15px;">Belum ada preset. Tambahkan preset untuk generate cepat!</p>
+		<?php } ?>
+
+		<!-- Add Preset Form -->
+		<button type="button" class="btn" id="btnShowAddPreset" onclick="toggleAddPreset();" style="background-color: #6f42c1; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#5a32a3'; this.style.transform='scale(1.03)';" onmouseout="this.style.backgroundColor='#6f42c1'; this.style.transform='scale(1)';">
+			<i class="fa fa-plus"></i> Tambah Preset
+		</button>
+
+		<div id="addPresetForm" style="display: none; margin-top: 15px;">
+			<div class="card" style="border: 2px solid #6f42c1; border-radius: 10px;">
+				<div class="card-header" style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 12px 15px; border-radius: 8px 8px 0 0;">
+					<h5 style="margin: 0; font-weight: 600;"><i class="fa fa-plus-circle"></i> Tambah Preset Baru</h5>
+				</div>
+				<div class="card-body" style="padding: 15px;">
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Nama Preset *</label>
+							<input type="text" id="presetName" placeholder="e.g., RGS - 12 Jam x50" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Profile *</label>
+							<select id="presetProfile" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+								<?php 
+								$TotalProf = count($getprofile);
+								for ($i = 0; $i < $TotalProf; $i++) {
+									echo "<option value='" . htmlspecialchars($getprofile[$i]['name']) . "'>" . htmlspecialchars($getprofile[$i]['name']) . "</option>";
+								}
+								?>
+							</select>
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Qty *</label>
+							<input type="number" id="presetQty" min="1" max="500" value="50" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Reseller</label>
+							<select id="presetReseller" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+								<option value="">-- Tanpa Reseller --</option>
+								<?php 
+								if (is_array($resellerData) && count($resellerData) > 0) {
+									foreach ($resellerData as $reseller) {
+										echo "<option value='" . htmlspecialchars($reseller['prefix']) . "'>" . htmlspecialchars($reseller['name']) . " (" . htmlspecialchars($reseller['prefix']) . ")</option>";
+									}
+								}
+								?>
+							</select>
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Server</label>
+							<select id="presetServer" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+								<option value="all">all</option>
+								<?php 
+								$TotalSrv = count($srvlist);
+								for ($i = 0; $i < $TotalSrv; $i++) {
+									echo "<option>" . $srvlist[$i]['name'] . "</option>";
+								}
+								?>
+							</select>
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">User Mode</label>
+							<select id="presetUsermode" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+								<option value="vc">User=Password (Voucher)</option>
+								<option value="up">User &amp; Password</option>
+							</select>
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">User Length</label>
+							<select id="presetUserlength" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5" selected>5</option>
+								<option value="6">6</option>
+							</select>
+						</div>
+						<div>
+							<label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #333;">Character</label>
+							<select id="presetChar" class="form-control" style="border-radius: 6px; border: 2px solid #d0d0d0; padding: 8px 12px;">
+								<option value="mix1">Random 5AB2C34D</option>
+								<option value="lower">Random abcd</option>
+								<option value="upper">Random ABCD</option>
+								<option value="upplow">Random aBcD</option>
+								<option value="mix">Random 5ab2c34d</option>
+								<option value="mix2">Random 5aB2c34D</option>
+							</select>
+						</div>
+					</div>
+					<div style="display: flex; gap: 10px; margin-top: 15px; padding-top: 12px; border-top: 2px solid #e0e0e0;">
+						<button type="button" onclick="saveQuickGenPreset();" class="btn" style="background-color: #6f42c1; color: white; border: none; border-radius: 6px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#5a32a3'; this.style.transform='scale(1.03)';" onmouseout="this.style.backgroundColor='#6f42c1'; this.style.transform='scale(1)';">
+							<i class="fa fa-save"></i> Simpan Preset
+						</button>
+						<button type="button" onclick="toggleAddPreset();" class="btn" style="background-color: #6c757d; color: white; border: none; border-radius: 6px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#5a6268'; this.style.transform='scale(1.03)';" onmouseout="this.style.backgroundColor='#6c757d'; this.style.transform='scale(1)';">
+							<i class="fa fa-times"></i> Batal
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
 <div class="row">
 <div class="col-8">
 <div class="card box-bordered">
@@ -715,5 +869,155 @@ document.addEventListener('DOMContentLoaded', function() {
     profSelect.value = defaultProfile;
   }
 });
+
+// Quick Generate Panel
+function toggleQuickGen() {
+  var body = document.getElementById('quickGenBody');
+  var chevron = document.getElementById('quickGenChevron');
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    body.style.opacity = '0';
+    body.style.transition = 'opacity 0.3s ease';
+    setTimeout(function() { body.style.opacity = '1'; }, 10);
+    chevron.style.transform = 'rotate(180deg)';
+  } else {
+    body.style.opacity = '0';
+    setTimeout(function() { body.style.display = 'none'; }, 300);
+    chevron.style.transform = 'rotate(0deg)';
+  }
+}
+
+function toggleAddPreset() {
+  var form = document.getElementById('addPresetForm');
+  var btn = document.getElementById('btnShowAddPreset');
+  if (form.style.display === 'none') {
+    form.style.display = 'block';
+    form.style.opacity = '0';
+    form.style.transition = 'opacity 0.3s ease';
+    setTimeout(function() { form.style.opacity = '1'; }, 10);
+    btn.style.display = 'none';
+  } else {
+    form.style.opacity = '0';
+    setTimeout(function() { form.style.display = 'none'; }, 300);
+    btn.style.display = 'inline-block';
+  }
+}
+
+function saveQuickGenPreset() {
+  var name = document.getElementById('presetName').value.trim();
+  var profile = document.getElementById('presetProfile').value;
+  var qty = document.getElementById('presetQty').value;
+  var prefix = document.getElementById('presetReseller').value;
+  var server = document.getElementById('presetServer').value;
+  var usermode = document.getElementById('presetUsermode').value;
+  var userlength = document.getElementById('presetUserlength').value;
+  var charType = document.getElementById('presetChar').value;
+
+  if (!name || !profile || !qty) {
+    alert('Nama preset, profile, dan qty harus diisi!');
+    return;
+  }
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', './process/quickgen.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var resp = JSON.parse(xhr.responseText);
+      if (resp.status === 'success') {
+        location.reload();
+      } else {
+        alert(resp.message || 'Gagal menyimpan preset');
+      }
+    }
+  };
+  xhr.send('action=add&name=' + encodeURIComponent(name) + '&profile=' + encodeURIComponent(profile) + '&qty=' + qty + '&prefix=' + encodeURIComponent(prefix) + '&server=' + encodeURIComponent(server) + '&usermode=' + encodeURIComponent(usermode) + '&userlength=' + userlength + '&char=' + encodeURIComponent(charType));
+}
+
+function deleteQuickGen(id, btn) {
+  if (!confirm('Hapus preset ini?')) return;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', './process/quickgen.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var resp = JSON.parse(xhr.responseText);
+      if (resp.status === 'success') {
+        var item = btn.closest('.quick-gen-item');
+        item.style.transition = 'all 0.3s ease';
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.5)';
+        setTimeout(function() { item.remove(); }, 300);
+      }
+    }
+  };
+  xhr.send('action=delete&id=' + encodeURIComponent(id));
+}
+
+function executeQuickGen(preset) {
+  if (!confirm('Generate ' + preset.qty + ' user dengan profile "' + preset.profile + '"?')) return;
+
+  // Fill the main form with preset values
+  var form = document.querySelector('form[method="post"]');
+  if (!form) return;
+
+  // Set form field values
+  document.getElementById('profselect').value = preset.profile;
+  document.getElementById('qtyinput').value = preset.qty;
+  document.getElementById('prefixinput').value = preset.prefix || '';
+  
+  // Set user mode
+  var userSelect = document.getElementById('user');
+  if (userSelect) userSelect.value = preset.usermode || 'vc';
+  
+  // Set user length
+  var userlSelect = document.getElementById('userl');
+  if (userlSelect) userlSelect.value = preset.userlength || 5;
+  
+  // Set server
+  var serverSelect = form.querySelector('select[name="server"]');
+  if (serverSelect) serverSelect.value = preset.server || 'all';
+  
+  // Set character
+  var charSelect = form.querySelector('select[name="char"]');
+  if (charSelect) charSelect.value = preset.char || 'mix1';
+  
+  // Update comment with auto format
+  updateComment();
+  
+  // Add hidden fields for timelimit, datalimit, mbgb if not present
+  var existingTimelimit = form.querySelector('input[name="timelimit"]');
+  if (!existingTimelimit) {
+    var tlInput = document.createElement('input');
+    tlInput.type = 'hidden';
+    tlInput.name = 'timelimit';
+    tlInput.value = '';
+    form.appendChild(tlInput);
+  }
+  var existingDatalimit = form.querySelector('input[name="datalimit"]');
+  if (!existingDatalimit) {
+    var dlInput = document.createElement('input');
+    dlInput.type = 'hidden';
+    dlInput.name = 'datalimit';
+    dlInput.value = '';
+    form.appendChild(dlInput);
+  }
+  var existingMbgb = form.querySelector('select[name="mbgb"]');
+  if (!existingMbgb) {
+    var mbInput = document.createElement('input');
+    mbInput.type = 'hidden';
+    mbInput.name = 'mbgb';
+    mbInput.value = '1048576';
+    form.appendChild(mbInput);
+  }
+
+  // Show loader
+  var loader = document.getElementById('loader');
+  if (loader) loader.style.display = 'inline';
+  
+  // Submit the form
+  form.submit();
+}
 </script>
 </div>
