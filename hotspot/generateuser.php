@@ -70,6 +70,24 @@ date_default_timezone_set($_SESSION['timezone']);
 		}
 	}
 
+	// Load quick qty data
+	$quickQtyFile = './voucher/quickqty.json';
+	$quickQtyData = array(10, 25, 100, 200, 300);
+	if (file_exists($quickQtyFile)) {
+		$tmpQty = json_decode(file_get_contents($quickQtyFile), true);
+		if (is_array($tmpQty) && count($tmpQty) > 0) {
+			$quickQtyData = $tmpQty;
+		}
+	}
+
+	// Indonesian month names for comment auto-fill
+	$bulanIndo = array(
+		1 => 'JANUARI', 2 => 'FEBRUARI', 3 => 'MARET', 4 => 'APRIL',
+		5 => 'MEI', 6 => 'JUNI', 7 => 'JULI', 8 => 'AGUSTUS',
+		9 => 'SEPTEMBER', 10 => 'OKTOBER', 11 => 'NOVEMBER', 12 => 'DESEMBER'
+	);
+	$currentBulan = $bulanIndo[(int)date('n')];
+
 	if (isset($_POST['qty'])) {
 		
 		$qty = ($_POST['qty']);
@@ -357,16 +375,27 @@ date_default_timezone_set($_SESSION['timezone']);
   <tr>
     <td class="align-middle"><?= $_qty ?></td>
     <td>
-      <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
         <div style="width: 120px;">
           <input class="form-control" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" style="border-radius: 6px; border: 2px solid #e0e0e0; padding: 8px 12px; font-weight: 500;">
         </div>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-          <button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(10);" onmouseover="this.style.backgroundColor='#138496'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1)';">10</button>
-          <button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(25);" onmouseover="this.style.backgroundColor='#138496'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1)';">25</button>
-          <button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(100);" onmouseover="this.style.backgroundColor='#138496'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1)';">100</button>
-          <button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(200);" onmouseover="this.style.backgroundColor='#138496'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1)';">200</button>
-          <button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(300);" onmouseover="this.style.backgroundColor='#138496'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#17a2b8'; this.style.transform='scale(1)';">300</button>
+        <div id="quickQtyContainer" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+          <?php 
+          foreach ($quickQtyData as $qtyVal) {
+            echo '<div class="quick-qty-item" style="position: relative; display: inline-flex;" data-qty="' . $qtyVal . '">';
+            echo '<button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px 0 0 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(' . $qtyVal . ');" onmouseover="this.style.backgroundColor=\'#138496\'; this.style.transform=\'scale(1.05)\';" onmouseout="this.style.backgroundColor=\'#17a2b8\'; this.style.transform=\'scale(1)\';">' . $qtyVal . '</button>';
+            echo '<button type="button" class="btn btn-sm" style="background-color: #dc3545; color: white; border: none; border-radius: 0 6px 6px 0; padding: 8px 6px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; line-height: 1;" onclick="deleteQuickQty(' . $qtyVal . ', this);" onmouseover="this.style.backgroundColor=\'#c82333\'; this.style.transform=\'scale(1.05)\';" onmouseout="this.style.backgroundColor=\'#dc3545\'; this.style.transform=\'scale(1)\';" title="Hapus ' . $qtyVal . '"><i class="fa fa-times"></i></button>';
+            echo '</div>';
+          }
+          ?>
+          <!-- Add Quick Qty Button -->
+          <button type="button" class="btn btn-sm" id="btnAddQty" style="background-color: #28a745; color: white; border: none; border-radius: 6px; padding: 8px 12px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="showAddQtyInput();" onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#28a745'; this.style.transform='scale(1)';" title="Tambah Quick Qty"><i class="fa fa-plus"></i></button>
+          <!-- Add Qty Input (hidden by default) -->
+          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 4px;">
+            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 70px; border-radius: 6px; border: 2px solid #28a745; padding: 6px 8px; font-weight: 500; font-size: 13px; text-align: center;">
+            <button type="button" class="btn btn-sm" style="background-color: #28a745; color: white; border: none; border-radius: 6px; padding: 7px 10px; cursor: pointer; transition: all 0.3s ease;" onclick="addQuickQty();" title="Simpan"><i class="fa fa-check"></i></button>
+            <button type="button" class="btn btn-sm" style="background-color: #6c757d; color: white; border: none; border-radius: 6px; padding: 7px 10px; cursor: pointer; transition: all 0.3s ease;" onclick="hideAddQtyInput();" title="Batal"><i class="fa fa-times"></i></button>
+          </div>
         </div>
       </div>
     </td>
@@ -460,7 +489,7 @@ date_default_timezone_set($_SESSION['timezone']);
     </td> -->
   </tr>
 	<tr>
-    <td class="align-middle"><?= $_comment ?></td><td><input class="form-control " type="text" title="No special characters" id="comment" autocomplete="off" name="adcomment" value=""></td>
+    <td class="align-middle"><?= $_comment ?></td><td><input class="form-control " type="text" title="No special characters" id="comment" autocomplete="off" name="adcomment" value="" placeholder="Auto: BULAN-PROFILE-PREFIX" style="border-radius: 6px; border: 2px solid #e0e0e0; padding: 8px 12px; font-weight: 500;"></td>
   </tr>
    <tr >
     <td  colspan="4" class="align-middle w-12"  id="GetValidPrice">
@@ -523,10 +552,14 @@ date_default_timezone_set($_SESSION['timezone']);
 </div>
 </div>
 <script>
+// Current month name (Indonesian)
+var currentBulan = '<?= $currentBulan ?>';
+
 // get valid $ price
 function GetVP(){
   var prof = document.getElementById('profselect').value;
   $("#GetValidPrice").load("./process/getvalidprice.php?name="+prof+"&session=<?= $session; ?> #getdata");
+  updateComment();
 } 
 
 // Set Qty from quick buttons
@@ -544,34 +577,111 @@ function setProfile(profileName) {
   profileButtons.forEach(function(btn) {
     var btnText = btn.textContent.trim();
     if (btnText === profileName || btnText.substring(1) === profileName) {
-      // Selected button
       btn.style.border = '3px solid #007bff';
       btn.style.boxShadow = '0 0 8px rgba(0, 123, 255, 0.5)';
       btn.style.backgroundColor = '#007bff';
       btn.style.color = 'white';
     } else {
-      // Unselected button
       btn.style.border = '2px solid #e0e0e0';
       btn.style.boxShadow = 'none';
       btn.style.backgroundColor = '#f0f0f0';
       btn.style.color = '#333';
     }
   });
+  
+  updateComment();
 }
 
-// Set Prefix from Reseller
+// Auto-fill comment with format: BULAN-PROFILE-PREFIX
+function updateComment() {
+  var profile = document.getElementById('profselect').value || '';
+  var prefix = document.getElementById('prefixinput').value || '';
+  var commentInput = document.getElementById('comment');
+  
+  if (profile && prefix) {
+    var profileClean = profile.replace(/\s+/g, '_').toUpperCase();
+    var prefixClean = prefix.toUpperCase();
+    commentInput.value = currentBulan + '-' + profileClean + '-' + prefixClean;
+  } else if (profile && !prefix) {
+    var profileClean = profile.replace(/\s+/g, '_').toUpperCase();
+    commentInput.value = currentBulan + '-' + profileClean;
+  } else {
+    commentInput.value = '';
+  }
+}
+
+// Quick Qty Management
+function showAddQtyInput() {
+  document.getElementById('btnAddQty').style.display = 'none';
+  document.getElementById('addQtyInputWrapper').style.display = 'flex';
+  document.getElementById('newQtyInput').focus();
+}
+
+function hideAddQtyInput() {
+  document.getElementById('btnAddQty').style.display = 'inline-block';
+  document.getElementById('addQtyInputWrapper').style.display = 'none';
+  document.getElementById('newQtyInput').value = '';
+}
+
+function addQuickQty() {
+  var newQty = parseInt(document.getElementById('newQtyInput').value);
+  if (!newQty || newQty < 1 || newQty > 999) {
+    alert('Masukkan qty antara 1 - 999');
+    return;
+  }
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', './process/quickqty.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var resp = JSON.parse(xhr.responseText);
+      if (resp.status === 'success') {
+        location.reload();
+      } else {
+        alert(resp.message || 'Qty sudah ada atau tidak valid');
+      }
+    }
+  };
+  xhr.send('action=add&qty=' + newQty);
+}
+
+function deleteQuickQty(qty, btn) {
+  if (!confirm('Hapus quick qty ' + qty + '?')) return;
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', './process/quickqty.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var resp = JSON.parse(xhr.responseText);
+      if (resp.status === 'success') {
+        // Remove the button group with animation
+        var item = btn.closest('.quick-qty-item');
+        item.style.transition = 'all 0.3s ease';
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.5)';
+        setTimeout(function() { item.remove(); }, 300);
+      }
+    }
+  };
+  xhr.send('action=delete&qty=' + qty);
+}
+
+// Set Prefix from Reseller & auto-fill comment
 document.addEventListener('DOMContentLoaded', function() {
   var resellerSelect = document.getElementById('resellerselect');
   var profSelect = document.getElementById('profselect');
+  var prefixInput = document.getElementById('prefixinput');
   
   if (resellerSelect) {
     resellerSelect.addEventListener('change', function() {
-      var prefixInput = document.getElementById('prefixinput');
       if (this.value) {
         prefixInput.value = this.value;
       } else {
         prefixInput.value = '';
       }
+      updateComment();
     });
   }
   
@@ -579,6 +689,30 @@ document.addEventListener('DOMContentLoaded', function() {
     profSelect.addEventListener('change', function() {
       GetVP();
     });
+  }
+  
+  // Also update comment when prefix is manually typed
+  if (prefixInput) {
+    prefixInput.addEventListener('input', function() {
+      updateComment();
+    });
+  }
+  
+  // Handle Enter key on new qty input
+  var newQtyInput = document.getElementById('newQtyInput');
+  if (newQtyInput) {
+    newQtyInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addQuickQty();
+      }
+    });
+  }
+  
+  // Set default profile value
+  var defaultProfile = '<?= isset($defaultProfile) ? $defaultProfile : '' ?>';
+  if (defaultProfile && profSelect) {
+    profSelect.value = defaultProfile;
   }
 });
 </script>

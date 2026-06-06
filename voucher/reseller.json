@@ -4,5 +4,41 @@
         "name": "REGIST",
         "prefix": "RGS",
         "created": "2026-06-07 01:35:20"
+    },
+    {
+        "id": 1780787014,
+        "name": "BI BAYAH",
+        "prefix": "BYH",
+        "created": "2026-06-07 06:03:34"
+    },
+    {
+        "id": 1780787030,
+        "name": "OM BAMBANG",
+        "prefix": "BMB",
+        "created": "2026-06-07 06:03:50"
+    },
+    {
+        "id": 1780787039,
+        "name": "TEH IMAS",
+        "prefix": "IMS",
+        "created": "2026-06-07 06:03:59"
+    },
+    {
+        "id": 1780787048,
+        "name": "TARSONO",
+        "prefix": "TSN",
+        "created": "2026-06-07 06:04:08"
+    },
+    {
+        "id": 1780787058,
+        "name": "NINING",
+        "prefix": "NNG",
+        "created": "2026-06-07 06:04:18"
+    },
+    {
+        "id": 1780787077,
+        "name": "MAYA",
+        "prefix": "MYA",
+        "created": "2026-06-07 06:04:37"
     }
 ]
