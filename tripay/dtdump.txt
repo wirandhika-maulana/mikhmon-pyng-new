@@ -1,0 +1,1 @@
+2024-12-10 02:38:06|[{"reference":"T2475420435694WONSU","merchant_ref":"09233558","payment_method":"DANA","payment_method_code":"DANA","total_amount":2000,"fee_merchant":0,"fee_customer":1000,"total_fee":1000,"amount_received":1000,"is_closed_payment":1,"status":"EXPIRED","paid_at":null,"note":"Transaction expired"}]# 

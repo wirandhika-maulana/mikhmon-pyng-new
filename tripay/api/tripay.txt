@@ -1,0 +1,18 @@
+Nama|Nama||*
+NoWa|6289123456789||*
+Email|admin@admin.com||*
+Url Return|https://nama domain.com/register/index.php?id=register||*
+F Core|https://nama doamin.com/tripay/api/tripay.php||*
+Kode Merhand|Kode1|Kode2*
+Private Key|Private Key1|Private Key2*
+Api Key|Api Key1|Api Key2*
+Detail Trx|https://tripay.co.id/api-sandbox/transaction/detail|https://tripay.co.id/api/transaction/detail*
+Intruksi|https://tripay.co.id/api-sandbox/payment/instruction|https://tripay.co.id/api/payment/instruction*
+Url Trx|https://tripay.co.id/api-sandbox/transaction/create|https://tripay.co.id/api/transaction/create*
+List Merchan|https://tripay.co.id/api-sandbox/merchant/payment-channel|https://tripay.co.id/api/merchant/payment-channel*
+Biaya Trx|https://tripay.co.id/api-sandbox/merchant/fee-calculator|https://tripay.co.id/api/merchant/fee-calculator*
+Status|2|2*
+Fee|2|2*
+Harga|10000|DANA
+089123456789
+Nama*

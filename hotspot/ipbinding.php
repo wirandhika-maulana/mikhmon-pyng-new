@@ -1,0 +1,134 @@
+<?php
+session_start();
+error_reporting(0);
+if (!isset($_SESSION["mikhmon"])) {
+	header("Location:../admin.php?id=login");
+} else {
+
+	$getbinding = $API->comm("/ip/hotspot/ip-binding/print");
+	$TotalReg = count($getbinding);
+
+	$countbinding = $API->comm("/ip/hotspot/ip-binding/print", array(
+		"count-only" => "",
+	));
+}
+
+?>
+<div class="row">
+	<div id="reloadbinding">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h3><i class=" fa fa-address-book"></i> <?= $_ip_bindings ?> 
+<?php
+if ($countbinding < 2) {
+	echo "$countbinding item";
+} elseif ($countbinding > 1) {
+	echo "$countbinding items";
+};
+?>
+					</h3>
+				</div>
+				<div class="card-body">	   
+					<div class="w-6">
+						<input id="filterTable" type="text" class="form-control" placeholder="Search..">
+					</div>
+					<div class="overflow box-bordered mr-t-10" style="max-height: 75vh">  	   
+						<table id="dataTable" class="table table-bordered table-hover text-nowrap"> 
+							<thead>
+								<tr>
+									<th></th>
+									<th></th>
+									<th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> Type</th>
+									<th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> <?= $_name ?></th>
+									<th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> MAC Address</th>
+									<th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> Address</th>
+									<th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> To Address</th>
+									<th class="pointer" title="Click to sort"><i class="fa fa-sort"></i> Server</th>
+								</tr>
+							</thead>
+							<tbody> 
+<?php
+for ($i = 0; $i < $TotalReg; $i++) {
+	$binding = $getbinding[$i];
+	$id = $binding['.id'];
+
+	$maca 	= $binding['mac-address'];
+	$addr 	= $binding['address'];
+	$toaddr = $binding['to-address'];
+	$server = $binding['server'];
+	$type	= $binding['type'];
+	if (empty(trim($server))) {$server="all";}
+	if (empty(trim($type))) {$type="reguler";}
+	$commt = $binding['comment'];
+	$bdisabled = $binding['disabled'];
+
+	echo "<tr>";
+	?>
+								<td style='text-align:center;'><i class='fa fa-minus-square text-danger pointer' onclick="if(confirm('Are you sure to delete (<?= $maca; ?>)?')){loadpage('./?remove-ip-binding=<?= $id . '&mac=' . $maca . '&addr=' . $addr; ?>&session=<?= $session; ?>')}else{}" title='Remove <?= $maca; ?>'></i>&nbsp&nbsp&nbsp&nbsp
+  	<?php
+
+		if ($bdisabled == "true") {
+			$uriprocess = "'./?enable-ip-binding=" . $id . "&session=" . $session . "'";
+			echo "<span class='text-warning btnsmall pointer' title='Enable Binding " . $addr . "' onclick=loadpage(".$uriprocess.")><i class='fa fa-lock'></span></td>";
+		} else {
+			$uriprocess = "'./?disable-ip-binding=" . $id . "&session=" . $session . "'";
+			echo "<span title='Disable Binding " . $addr . "' class='btnsmall pointer' onclick=loadpage(".$uriprocess.")><i class='fa fa-unlock '></span></td>";
+		}
+		echo "<td style='text-align:center;'>";
+		if ($binding['bypassed'] == "true") {
+			$uriproses = "'./?block-ip-binding=" . $id . "&session=" . $session . "'";
+			echo "<span style='color:#0091EA;cursor:pointer;font-weight:bold;' title='bypassed\nKlik, untuk merubah ke blocked.' class='btnsmall pointer' onclick=loadpage(".$uriproses.")>P</span>";
+		} elseif ($binding['blocked'] == "true") {
+			$uriproses = "'./?reguler-ip-binding=" . $id . "&session=" . $session . "'";
+			echo "<span style='color:#ffff00;cursor:pointer;font-weight:bold;' title='bypassed\nKlik, untuk merubah ke reguler.' class='btnsmall pointer' onclick=loadpage(".$uriproses.")>B</span>";
+		} else {
+			$uriproses = "'./?bypassed-ip-binding=" . $id . "&session=" . $session . "'";
+			echo "<span style='color:white;cursor:pointer;font-weight:bold;' title='bypassed\nKlik, untuk merubah ke bypassed.' class='btnsmall pointer' onclick=loadpage(".$uriproses.")>R</span>";
+		}
+		echo "</td>";
+		echo "<td>" . $type. "</td>";
+		echo "<td>" . $commt . "</td>";
+
+		$ceknetwatch = $API->comm("/tool/netwatch/print",["?host" => "$toaddr"]);
+		if (empty($ceknetwatch)) {
+			echo "<td><a title='Netwatch Mac ".$maca."\nIp ".$toaddr."\nKlik untuk melakukan Netwatch' href='./?interface=add-netwatch&iphost=".$toaddr."&flag=B&session=".$session."'><b>".$maca."</b></a></td>";
+		}else{
+			echo "<td style='cursor:pointer;' title='Ip ".$toaddr."\nSudah di Netwatch.'><a href='./?interface=netwatch&session=".$session."'>".$toaddr."</a></td>";
+		}
+	
+		echo "<td>" . $addr . "</a></td>";
+		echo "<td>" . $toaddr . "</td>";
+		echo "<td>" . $server . "</td>";
+		echo "</tr>";
+	}
+	?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-window" id="help" aria-hidden="true">
+			<div>
+				<header><h1>Help</h1></header>
+				<a style="font-weight:bold;" href="#" title="Close" class="modal-close">X</a>
+					<p> 
+		    <?php if ($currency == in_array($currency, $cekindo['indo'])) { ?>
+						<ul>
+							<li>Masuk ke menu Hosts.</li>
+							<li>Klik IP Address yang ingin di binding.</li>
+						</ul>
+		    <?php 
+				} else { ?>
+						<ul>
+							<li>Go to Hosts menu.</li>
+							<li>Click the IP Address that you want to binding.</li>
+						</ul>
+		    <?php 
+				} ?>
+					</p>
+			</div>
+		</div>
+	</div>
+</div>
