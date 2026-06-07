@@ -81,32 +81,58 @@ if (!isset($_SESSION["mikhmon"])) {
     $lreport = "style='display:block;'";
   }
   
-   // get & counting hotspot users
-    $dtprofile= $API->comm("/ppp/profile/print");
+   // Load Dual Router Config (Secondary PPPoE Router)
+    $dual_router_ip = "";
+    $dual_router_user = "";
+    $dual_router_pass = "";
+    $dual_file = "./include/dual_router_config.php";
+    if (file_exists($dual_file)) {
+        include($dual_file);
+        if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+            $dual_router_ip = $dual_router[$session]['ip'];
+            $dual_router_user = $dual_router[$session]['user'];
+            $dual_router_pass = decrypt($dual_router[$session]['pass']);
+        }
+    }
+
+    // Determine which API to use for PPPoE stats
+    $API_FOR_PPP = $API;
+    $ppp_connected = false;
+    if (!empty($dual_router_ip)) {
+        $API_PPP = new RouterosAPI();
+        $API_PPP->debug = false;
+        if ($API_PPP->connect($dual_router_ip, $dual_router_user, $dual_router_pass)) {
+            $API_FOR_PPP = $API_PPP;
+            $ppp_connected = true;
+        }
+    }
+
+    // get & counting ppp profiles
+    $dtprofile = $API_FOR_PPP->comm("/ppp/profile/print");
     $countprofiles = count($dtprofile);
     $defa=0;
-	for ($x=0;$x<$countprofiles;$x++) {
-		if ($dtprofile[$x]['default']=="true") {
-			$defa++;
-		}
-	}
-	$countprofiles=$countprofiles-$defa;
-	if ($countprofiles < 2) {
+    for ($x=0;$x<$countprofiles;$x++) {
+        if ($dtprofile[$x]['default']=="true") {
+            $defa++;
+        }
+    }
+    $countprofiles=$countprofiles-$defa;
+    if ($countprofiles < 2) {
         $uunit = "item";
     } elseif ($countprofiles > 1) {
         $uunit = "items";
     }
 
     // get & counting ppp secrets
-    $countsecrets = count($API->comm("/ppp/secret/print"));
+    $countsecrets = count($API_FOR_PPP->comm("/ppp/secret/print"));
     if ($countsecrets < 2) {
         $hunit = "item";
     } elseif ($countsecrets > 1) {
         $hunit = "items";
     }
 
-    // get & counting ppp secrets
-    $countpppactive = count($API->comm("/ppp/active/print"));
+    // get & counting ppp active
+    $countpppactive = count($API_FOR_PPP->comm("/ppp/active/print"));
     if ($countpppactive < 2) {
         $hunit = "item";
     } elseif ($countpppactive > 1) {
@@ -114,13 +140,16 @@ if (!isset($_SESSION["mikhmon"])) {
     }
 
     // Calculate non-active PPP secrets
-$countpppnonactive = count($API->comm("/ppp/nonactive/print"));
-$countpppnonactive = $countsecrets - $countpppactive;
-if ($countpppnonactive < 2) {
-    $hunit = "item";
-} elseif ($countpppnonactive > 1) {
-    $hunit = "items";
-}
+    $countpppnonactive = $countsecrets - $countpppactive;
+    if ($countpppnonactive < 2) {
+        $hunit = "item";
+    } elseif ($countpppnonactive > 1) {
+        $hunit = "items";
+    }
+
+    if ($ppp_connected) {
+        $API_PPP->disconnect();
+    }
 
 /*
 // get selling report

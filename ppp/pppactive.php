@@ -24,6 +24,7 @@ if (!isset($_SESSION["mikhmon"])) {
 	include "ppp/function.php";
 
 	$getactive = $API->comm("/ppp/active/print");
+    if (!is_array($getactive)) $getactive = [];
 	$TotalReg = count($getactive);
  
 	$countactive = $API->comm("/ppp/active/print", array(

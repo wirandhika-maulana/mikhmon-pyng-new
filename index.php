@@ -69,7 +69,45 @@ if (!isset($_SESSION["mikhmon"])) {
   include_once('./lib/formatbytesbites.php');
   $API = new RouterosAPI();
   $API->debug = false;
-  $API->connect($iphost, $userhost, decrypt($passwdhost));
+
+  // Load Dual Router Config (Secondary PPPoE Router)
+  $dual_router_ip = "";
+  $dual_router_user = "";
+  $dual_router_pass = "";
+  $dual_file = "./include/dual_router_config.php";
+  if (file_exists($dual_file)) {
+      include($dual_file);
+      if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+          $dual_router_ip = $dual_router[$session]['ip'];
+          $dual_router_user = $dual_router[$session]['user'];
+          $dual_router_pass = decrypt($dual_router[$session]['pass']);
+      }
+  }
+
+  // Determine if current request is for a PPPoE module
+  $ppp_get = isset($_GET['ppp']) ? $_GET['ppp'] : '';
+  $pageppp = array(
+      'secrets','profiles','active','addsecret','billing','history',
+      'nonactive', 'ppplog', 'grafik', 'edit-profile', 'add-profile', 'add-secret-by-profile'
+  );
+  $is_pppoe = false;
+  if (
+      in_array($ppp_get, $pageppp) || 
+      isset($_GET['enable-pppsecret']) || 
+      isset($_GET['disable-pppsecret']) || 
+      isset($_GET['remove-pppsecret']) || 
+      isset($_GET['remove-pprofile']) || 
+      isset($_GET['remove-pactive'])
+  ) {
+      $is_pppoe = true;
+  }
+
+  // Connect to the appropriate router
+  if ($is_pppoe && !empty($dual_router_ip)) {
+      $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+  } else {
+      $API->connect($iphost, $userhost, decrypt($passwdhost));
+  }
 
   $getidentity = $API->comm("/system/identity/print");
   $identity = $getidentity[0]['name'];

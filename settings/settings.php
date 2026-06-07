@@ -70,17 +70,52 @@ if (!isset($_SESSION["mikhmon"])) {
       $newcontent = str_replace((string)$search[$i], (string)$replace[$i], "$content");
       file_put_contents("./include/config.php", "$newcontent");
     }
+
+    // Save Dual Router Config
+    $dual_file = "./include/dual_router_config.php";
+    if (!file_exists($dual_file)) {
+      file_put_contents($dual_file, "<?php\n\$dual_router = array();\n?>");
+    }
+    include($dual_file);
+    $dual_router[$sesname] = array(
+      'ip' => $_POST['ipmik_ppp'],
+      'user' => $_POST['usermik_ppp'],
+      'pass' => encrypt($_POST['passmik_ppp'])
+    );
+    file_put_contents($dual_file, "<?php\n\$dual_router = " . var_export($dual_router, true) . ";\n?>");
+
     $_SESSION["connect"] = "";
     echo "<script>window.location='./admin.php?id=settings&session=" . $sesname . "'</script>";
   }
   if ($currency == "") {
     echo "<script>window.location='./admin.php?id=settings&session=" . $session . "'</script>";
   }
+
+  // Load Dual Router Config for UI
+  $iphost_ppp = "";
+  $userhost_ppp = "";
+  $passwdhost_ppp = "";
+  $dual_file = "./include/dual_router_config.php";
+  if (file_exists($dual_file)) {
+    include($dual_file);
+    if (isset($dual_router[$session])) {
+      $iphost_ppp = $dual_router[$session]['ip'];
+      $userhost_ppp = $dual_router[$session]['user'];
+      $passwdhost_ppp = decrypt($dual_router[$session]['pass']);
+    }
+  }
 }
 ?>
 <script>
   function PassMk(){
     var x = document.getElementById('passmk');
+    if (x.type === 'password') {
+    x.type = 'text';
+    } else {
+    x.type = 'password';
+    }}
+  function PassMkPPP(){
+    var x = document.getElementById('passmk_ppp');
     if (x.type === 'password') {
     x.type = 'text';
     } else {
@@ -128,7 +163,7 @@ if (!isset($_SESSION["mikhmon"])) {
             <div class="col-12">
 				      <div class="card">
         	     <div class="card-header">
-            	   <h3 class="card-title">MikroTik <?= $_SESSION["connect"]; ?></h3>
+             	   <h3 class="card-title">Primary MikroTik (Hotspot)</h3>
         	     </div>
         	     <div class="card-body">
 				<table class="table table-sm">
@@ -152,28 +187,55 @@ if (!isset($_SESSION["mikhmon"])) {
     						</div>
 						</td>
 					</tr>
-					<tr>
-						<td colspan="2">
-								<div class="input-group-4">
-									<input class="group-item group-item-md" type="submit" style="cursor: pointer;" name="save" value="Save"/>
-								</div>
-								<div class="input-group-4">	
-                  <span class="connect pointer group-item group-item-md pd-2p5 text-center align-middle" id="<?= $session; ?>&c=settings">Connect</span>
-								</div>
-								<div class="input-group-3">	
-                  <span class="pointer group-item group-item-md pd-2p5 text-center align-middle" id="ping_test">Ping</span>
-              	</div>
-              	<div class="input-group-1">	
-									<div style="cursor: pointer;" class="group-item group-item-r pd-2p5 text-center" onclick="location.reload();" title="Reload Data"><i class="fa fa-refresh"></i></div>
-								</div>
-            		</div>	
-    					</td>
-    				</tr>
 				</table>
 			</div>
     </div>  	
-    <div id="ping">
-    </div>	
+    
+    <div class="card" style="margin-top: 15px;">
+       <div class="card-header">
+           <h3 class="card-title">Secondary MikroTik (PPPoE) - Optional</h3>
+       </div>
+       <div class="card-body">
+        <table class="table table-sm">
+          <tr>
+              <td class="align-middle">IP MikroTik </td><td><input class="form-control" type="text" size="15" name="ipmik_ppp" title="IP MikroTik for PPPoE" placeholder="Leave empty for single router" value="<?= $iphost_ppp; ?>"/></td>
+          </tr>
+          <tr>
+            <td class="align-middle">Username  </td><td><input class="form-control" id="usermk_ppp" type="text" size="10" name="usermik_ppp" title="User MikroTik for PPPoE" value="<?= $userhost_ppp; ?>"/></td>
+          </tr>
+          <tr>
+            <td class="align-middle">Password  </td><td>
+              <div class="input-group">
+                <div class="input-group-11 col-box-10">
+                    <input class="group-item group-item-l" id="passmk_ppp" type="password" name="passmik_ppp" title="Password MikroTik for PPPoE" value="<?= $passwdhost_ppp; ?>"/>
+                    </div>
+                      <div class="input-group-1 col-box-2">
+                        <div class="group-item group-item-r pd-2p5 text-center align-middle">
+                            <input title="Show/Hide Password" type="checkbox" onclick="PassMkPPP()">
+                        </div>
+                      </div>
+                </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+    <div class="card" style="margin-top: 15px; border: none; background: transparent;">
+      <div class="input-group-4">
+          <input class="group-item group-item-md" type="submit" style="cursor: pointer;" name="save" value="Save"/>
+      </div>
+      <div class="input-group-4">	
+          <span class="connect pointer group-item group-item-md pd-2p5 text-center align-middle" id="<?= $session; ?>&c=settings">Connect</span>
+      </div>
+      <div class="input-group-3">	
+          <span class="pointer group-item group-item-md pd-2p5 text-center align-middle" id="ping_test">Ping</span>
+      </div>
+      <div class="input-group-1">	
+          <div style="cursor: pointer;" class="group-item group-item-r pd-2p5 text-center" onclick="location.reload();" title="Reload Data"><i class="fa fa-refresh"></i></div>
+      </div>
+    </div>
+    <div id="ping"></div>	
 	</div>
 </div>
 <div class="col-6">

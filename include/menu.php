@@ -375,6 +375,7 @@ include('./info.php');
 <a id="cpage" class="navbar-left" href="javascript:void(0)"><?= $mpage; ?></a>
 </div>
  <div class="navbar-right">
+  <a id="admin-settings-nav" href="./admin.php?id=sessions" ><i class="fa fa-gear mr-1"></i> <?= $_admin_settings ?></a>
   <a id="logout" href="./?hotspot=logout&session=<?= $session; ?>" ><i class="fa fa-sign-out mr-1"></i> <?= $_logout ?></a>
   <select class="stheme ses text-right mr-t-10 pd-5">
     <option> <?= $_theme ?></option>

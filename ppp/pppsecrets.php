@@ -32,6 +32,7 @@ if (!isset($_SESSION["mikhmon"])) {
 	include "ppp/function.php";
 	if ($prof == "all") {
 		$getsecret = $API->comm("/ppp/secret/print");
+        if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
 
 		$countsecret = $API->comm("/ppp/secret/print", array(
@@ -39,6 +40,7 @@ if (!isset($_SESSION["mikhmon"])) {
 		));
 	} elseif ($prof == "") {
 		$getsecret = $API->comm("/ppp/secret/print");
+        if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
 
 		$countsecret = $API->comm("/ppp/secret/print", array(
@@ -48,6 +50,7 @@ if (!isset($_SESSION["mikhmon"])) {
 		$getsecret = $API->comm("/ppp/secret/print", array(
 			"?profile" => "$prof",
 		));
+        if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
 
 		$countsecret = $API->comm("/ppp/secret/print", array(
@@ -60,6 +63,7 @@ if (!isset($_SESSION["mikhmon"])) {
 			"?comment" => "$comm",
 			//"?uptime" => "00:00:00"
 		));
+        if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
 
 		$countsecret = $API->comm("/ppp/secret/print", array(
