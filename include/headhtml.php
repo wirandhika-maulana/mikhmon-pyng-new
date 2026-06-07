@@ -39,7 +39,7 @@ error_reporting(0);
 		<!-- Mikhmon UI -->
 		<link rel="stylesheet" href="css/mikhmon-ui.<?= $theme; ?>.min.css">
 		<!-- Modern UI Overlay -->
-		<link rel="stylesheet" href="css/mikhmon-modern.css">
+		<link rel="stylesheet" href="css/mikhmon-modern.css?v=<?= time(); ?>">
 		<!-- favicon -->
 		<link rel="icon" href="./img/favicon.PNG" />
 		<!-- jQuery -->

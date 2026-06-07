@@ -20,6 +20,13 @@ session_start();
 ?>
 
 <div class="modern-login-wrapper">
+  <!-- Theme Toggle Button -->
+  <div style="position: absolute; top: 20px; right: 20px;">
+    <button id="themeToggle" class="btn" style="background: rgba(128,128,128,0.1); color: var(--modern-text); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+      <i class="fa fa-moon-o" id="themeIcon"></i>
+    </button>
+  </div>
+
   <div class="modern-login-card">
     <div class="login-header">
       <img src="img/favicon.png" alt="MIKHMON Logo">
@@ -69,6 +76,38 @@ session_start();
     // Client-side validation if needed
     return true; 
   }
+
+  // Theme Toggle Logic for Login Page
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const body = document.body;
+
+  // Initialize from localStorage or default to light
+  let currentTheme = localStorage.getItem('mikhmon_login_theme') || 'light';
+  
+  function applyTheme(theme) {
+    if(theme === 'dark') {
+      body.classList.remove('theme-light');
+      body.classList.add('theme-dark');
+      themeIcon.classList.remove('fa-moon-o');
+      themeIcon.classList.add('fa-sun-o');
+    } else {
+      body.classList.remove('theme-dark');
+      body.classList.add('theme-light');
+      themeIcon.classList.remove('fa-sun-o');
+      themeIcon.classList.add('fa-moon-o');
+    }
+  }
+
+  // Apply initial theme
+  applyTheme(currentTheme);
+
+  themeToggle.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('mikhmon_login_theme', currentTheme);
+    applyTheme(currentTheme);
+  });
+
 </script>
 
 <script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>

@@ -24,103 +24,135 @@ if (!isset($_SESSION["mikhmon"])) {
 }
 ?>
 <style>
-:root {
-    --primary-color: #2196F3;
-    --primary-hover: #1976D2;
-    --card-bg: #fff;
-    --card-header-bg: #f9f9f9;
-    --text-color: #222;
-    --text-muted: #777;
-    --border-color: #eee;
-    --shadow-color: rgba(0,0,0,.08);
-}
-body.dark-theme {
-    --primary-color: #2196F3;
-    --primary-hover: #42A5F5;
-    --card-bg: #111;
-    --card-header-bg: #181818;
-    --text-color: #e0e0e0;
-    --text-muted: #aaa;
-    --border-color: #444;
-    --shadow-color: rgba(0,0,0,.2);
-}
-.card {
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px var(--shadow-color);
+.modern-about-card {
+    background: var(--modern-card-bg);
+    border: 1px solid var(--modern-border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px var(--modern-shadow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     margin-bottom: 24px;
-    transition: all 0.3s;
-    overflow: hidden;
+    color: var(--modern-text);
+    transition: all 0.3s ease;
 }
-.card-header {
-    padding: 16px 20px;
-    background-color: var(--card-header-bg);
-    border-bottom: 1px solid var(--border-color);
+
+.modern-about-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px var(--modern-shadow);
+}
+
+.modern-about-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--modern-border);
 }
-.card-header h3 {
+
+.modern-about-header h3 {
     margin: 0;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #20a8d8, #6f42c1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
-    color: var(--text-color);
+    gap: 10px;
 }
-.card-header h3 i {
-    margin-right: 8px;
-    color: var(--primary-color);
+
+.modern-about-header h3 i {
+    -webkit-text-fill-color: #20a8d8;
 }
-.card-body {
-    padding: 20px;
-    color: var(--text-color);
+
+.modern-about-content {
+    line-height: 1.6;
 }
-.about-section {
-    text-align: left;
+
+.modern-about-content h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--modern-text);
+}
+
+.modern-about-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.modern-about-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(128,128,128,0.2);
+    display: flex;
+    align-items: center;
+}
+
+.modern-about-list li:last-child {
+    border-bottom: none;
+}
+
+.modern-about-list li strong {
+    min-width: 100px;
+    color: #20a8d8;
+}
+
+.modern-about-list a {
+    color: var(--modern-text);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.modern-about-list a:hover {
+    color: #6f42c1;
+}
+
+.modern-changelog-item {
+    background: rgba(128,128,128,0.05);
+    border-left: 4px solid #6f42c1;
+    padding: 15px;
+    border-radius: 0 8px 8px 0;
     margin-bottom: 20px;
 }
-.about-section h3 {
-    margin-bottom: 15px;
-    font-size: 22px;
+
+.modern-changelog-date {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 8px;
     font-weight: 600;
-    color: var(--primary-color);
 }
-.about-section ul {
-    padding-left: 18px;
-    margin-bottom: 10px;
+
+.modern-changelog-item ul {
+    margin: 0;
+    padding-left: 20px;
 }
-.about-section ul li {
-    margin-bottom: 6px;
-    color: var(--text-color);
-    font-size: 15px;
-}
-.about-section a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-.about-section a:hover {
-    color: var(--primary-hover);
-    text-decoration: underline;
-}
-.about-footer {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
-    color: var(--text-muted);
+
+.modern-changelog-item li {
+    margin-bottom: 5px;
     font-size: 14px;
 }
-.changelog-container {
-    margin-top: 20px;
+
+.modern-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    border-top: 1px solid var(--modern-border);
 }
+
 .iFWrapper {
     position: relative;
     padding-bottom: 56.25%;
     padding-top: 25px;
     height: 0;
     margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--modern-border);
 }
 .iFWrapper iframe {
     position: absolute;
@@ -129,64 +161,61 @@ body.dark-theme {
     width: 100%;
     height: 100%;
     border: none;
-    border-radius: 8px;
-    background: var(--card-bg);
-    box-shadow: 0 2px 10px var(--shadow-color);
-}
-@media (max-width: 768px) {
-    .card-body, .card-header {
-        padding: 12px;
-    }
-    .about-section h3 {
-        font-size: 18px;
-    }
 }
 </style>
 
 <div class="row">
   <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="fa fa-info-circle"></i> About</h3>
+    <div class="modern-about-card">
+      <div class="modern-about-header">
+        <h3><i class="fa fa-info-circle"></i> About MIKHMON</h3>
       </div>
-      <div class="card-body">
-        <div class="about-section">
-          <h3>MIKHMON V<?= $_SESSION['v']; ?></h3>
-          <p>
-            Aplikasi ini dipersembahkan untuk pengusaha hotspot di manapun Anda berada.
-            Semoga makin sukses.
-          </p>
-          <div>
-            <ul>
-              <li>Author : Laksamadi Guko</li>
-              <li>Licence : <a href="https://github.com/laksa19/mikhmonv2/blob/master/LICENSE">GPLv2</a></li>
-              <li>API Class : <a href="https://github.com/BenMenking/routeros-api">routeros-api</a></li>
-              <li>Website : <a href="https://laksa19.github.io">laksa19.github.io</a></li>
-              <li>Facebook : <a href="https://fb.com/laksamadi">fb.com/laksamadi</a></li>
-            </ul>
-          </div>
-          <p>
-            Terima kasih untuk semua yang telah mendukung pengembangan MIKHMON.
-          </p>
-        </div>
+      <div class="modern-about-content">
+        <h4>MIKHMON V<?= $_SESSION['v']; ?> (Modernized)</h4>
+        <p>Aplikasi ini dipersembahkan untuk pengusaha hotspot di manapun Anda berada. Semoga makin sukses dengan tampilan yang lebih modern, responsif, dan futuristik.</p>
         
-        <div class="about-footer">
+        <ul class="modern-about-list">
+          <li><strong>Author</strong> <span>Laksamadi Guko</span></li>
+          <li><strong>Mod Design</strong> <span>Margin.Lab & AI Agent</span></li>
+          <li><strong>Licence</strong> <span><a href="https://github.com/laksa19/mikhmonv2/blob/master/LICENSE" target="_blank">GPLv2</a></span></li>
+          <li><strong>Website</strong> <span><a href="https://laksa19.github.io" target="_blank">laksa19.github.io</a></span></li>
+        </ul>
+        
+        <div class="modern-footer">
           <div><i>Copyright &copy; 2018 Laksamadi Guko</i></div>
-          <div><i>Mod Design By Margin.Lab</i></div>
+          <div><i>Modern Glassmorphism Design by Antigravity</i></div>
         </div>
       </div>
     </div>
   </div>
   
-  <div class="col-12 changelog-container">
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="fa fa-info-circle"></i> Changelog</h3>
+  <div class="col-12">
+    <div class="modern-about-card">
+      <div class="modern-about-header">
+        <h3><i class="fa fa-history"></i> Changelog</h3>
       </div>
-      <div class="card-body">
-        <div class="iFWrapper">
-          <iframe src="https://laksa19.github.io/mikhmonv3"></iframe>
+      <div class="modern-about-content">
+        
+        <div class="modern-changelog-item">
+          <div class="modern-changelog-date">Version 3.0 (Modern Redesign) - June 2026</div>
+          <ul>
+            <li><strong>Added</strong>: Full Modern Glassmorphism UI integration globally.</li>
+            <li><strong>Added</strong>: Theme switcher toggle button on the Login page (Light/Dark support).</li>
+            <li><strong>Added</strong>: Redesigned About & Changelog page.</li>
+            <li><strong>Fixed</strong>: Visibility of the MIKHMON logo/brand in the Light Theme.</li>
+            <li><strong>Improved</strong>: Responsive Dashboard layout and Report Tables redesign.</li>
+            <li><strong>Improved</strong>: Card styling, input fields, and pill-shaped buttons with hover effects.</li>
+          </ul>
         </div>
+
+        <div class="modern-changelog-item" style="opacity: 0.8; border-left-color: #888;">
+          <div class="modern-changelog-date">Version 2.0 (Legacy)</div>
+          <ul>
+            <li><strong>Initial Release</strong>: Original Mikhmon interface by Laksamadi Guko.</li>
+            <li><strong>Features</strong>: Hotspot User Generation, Session Management, Quick Print.</li>
+          </ul>
+        </div>
+        
       </div>
     </div>
   </div>
