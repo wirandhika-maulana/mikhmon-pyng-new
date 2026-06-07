@@ -30,10 +30,16 @@ error_reporting(0);
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- Theme color -->
 		<meta name="theme-color" content="<?= $themecolor ?>" />
+		<!-- Google Fonts - Inter -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 		<!-- Font Awesome -->
 		<link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.min.css" />
 		<!-- Mikhmon UI -->
 		<link rel="stylesheet" href="css/mikhmon-ui.<?= $theme; ?>.min.css">
+		<!-- Modern UI Overlay -->
+		<link rel="stylesheet" href="css/mikhmon-modern.css">
 		<!-- favicon -->
 		<link rel="icon" href="./img/favicon.PNG" />
 		<!-- jQuery -->

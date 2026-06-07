@@ -562,7 +562,7 @@ date_default_timezone_set($_SESSION['timezone']);
     <td class="align-middle"><?= $_profile ?></td>
     <td>
       <input type="hidden" id="profselect" name="profile" value="">
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; padding: 4px 0;">
         <?php 
         $TotalReg = count($getprofile);
         if ($genprof != "") {
@@ -571,13 +571,38 @@ date_default_timezone_set($_SESSION['timezone']);
           $defaultProfile = $getprofile[0]['name'];
         }
         
+        // Modern gradient color palette for profile buttons
+        $profileColors = array(
+          array('#667eea', '#764ba2'),
+          array('#f093fb', '#f5576c'),
+          array('#4facfe', '#00f2fe'),
+          array('#43e97b', '#38f9d7'),
+          array('#fa709a', '#fee140'),
+          array('#a18cd1', '#fbc2eb'),
+          array('#fccb90', '#d57eeb'),
+          array('#e0c3fc', '#8ec5fc'),
+          array('#f6d365', '#fda085'),
+          array('#96fbc4', '#f9f586'),
+        );
+        
         if ($TotalReg > 0) {
           for ($i = 0; $i < $TotalReg; $i++) {
             $profileName = $getprofile[$i]['name'];
             $isSelected = ($profileName == $defaultProfile);
-            $borderStyle = $isSelected ? 'border: 3px solid #007bff; box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);' : 'border: 2px solid #e0e0e0;';
-            $bgColor = $isSelected ? 'background-color: #007bff; color: white;' : 'background-color: #f0f0f0; color: #333;';
-            echo "<button type='button' class='btn btn-sm' style='" . $borderStyle . $bgColor . " border-radius: 6px; padding: 8px 12px; font-weight: 500; transition: all 0.3s ease; cursor: pointer;' onclick=\"setProfile('" . htmlspecialchars($profileName) . "'); GetVP();\" onmouseover=\"this.style.transform='scale(1.05)';\" onmouseout=\"this.style.transform='scale(1)';\">" . htmlspecialchars(substr($profileName, 0, 15)) . "</button>";
+            $colorIdx = $i % count($profileColors);
+            $gradFrom = $profileColors[$colorIdx][0];
+            $gradTo = $profileColors[$colorIdx][1];
+            
+            if ($isSelected) {
+              $btnStyle = "background: linear-gradient(135deg, {$gradFrom}, {$gradTo}); color: white; border: 2px solid transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 3px {$gradFrom}88; transform: scale(1.05);";
+            } else {
+              $btnStyle = "background: linear-gradient(135deg, {$gradFrom}33, {$gradTo}33); color: #e4e7ea; border: 2px solid {$gradFrom}55;";
+            }
+            
+            echo "<button type='button' class='prof-btn' data-profile='" . htmlspecialchars($profileName) . "' data-grad-from='{$gradFrom}' data-grad-to='{$gradTo}' style='{$btnStyle} border-radius: 20px; padding: 8px 18px; font-weight: 600; font-size: 12.5px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); letter-spacing: 0.3px; position: relative; overflow: hidden;' onclick=\"setProfile('" . htmlspecialchars($profileName) . "'); GetVP();\" onmouseover=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}, {$gradTo})'; this.style.color='white'; this.style.boxShadow='0 4px 15px {$gradFrom}66'; this.style.transform='translateY(-2px) scale(1.03)';}\" onmouseout=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}33, {$gradTo}33)'; this.style.color='#e4e7ea'; this.style.boxShadow='none'; this.style.transform='none';}\">";
+            echo "<i class='fa fa-wifi' style='margin-right: 5px; font-size: 10px;'></i>";
+            echo htmlspecialchars(substr($profileName, 0, 18));
+            echo "</button>";
           }
         }
         ?>
@@ -587,26 +612,26 @@ date_default_timezone_set($_SESSION['timezone']);
   <tr>
     <td class="align-middle"><?= $_qty ?></td>
     <td>
-      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 120px;">
-          <input class="form-control" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" style="border-radius: 6px; border: 2px solid #e0e0e0; padding: 8px 12px; font-weight: 500;">
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 4px 0;">
+        <div style="position: relative; width: 100px;">
+          <input class="form-control" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" style="border-radius: 12px; border: 2px solid #667eea88; padding: 9px 14px; font-weight: 700; font-size: 15px; text-align: center; background: #2f353a; color: #f3f4f5; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;" onfocus="this.style.borderColor='#764ba2'; this.style.boxShadow='0 0 0 3px rgba(118,75,162,0.25), 0 4px 12px rgba(0,0,0,0.3)';" onblur="this.style.borderColor='#667eea88'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';">
         </div>
-        <div id="quickQtyContainer" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+        <div id="quickQtyContainer" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           <?php 
           foreach ($quickQtyData as $qtyVal) {
-            echo '<div class="quick-qty-item" style="position: relative; display: inline-flex;" data-qty="' . $qtyVal . '">';
-            echo '<button type="button" class="btn btn-sm" style="background-color: #17a2b8; color: white; border: none; border-radius: 6px 0 0 6px; padding: 8px 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="setQty(' . $qtyVal . ');" onmouseover="this.style.backgroundColor=\'#138496\'; this.style.transform=\'scale(1.05)\';" onmouseout="this.style.backgroundColor=\'#17a2b8\'; this.style.transform=\'scale(1)\';">' . $qtyVal . '</button>';
-            echo '<button type="button" class="btn btn-sm" style="background-color: #dc3545; color: white; border: none; border-radius: 0 6px 6px 0; padding: 8px 6px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; line-height: 1;" onclick="deleteQuickQty(' . $qtyVal . ', this);" onmouseover="this.style.backgroundColor=\'#c82333\'; this.style.transform=\'scale(1.05)\';" onmouseout="this.style.backgroundColor=\'#dc3545\'; this.style.transform=\'scale(1)\';" title="Hapus ' . $qtyVal . '"><i class="fa fa-times"></i></button>';
+            echo '<div class="quick-qty-item" style="position: relative; display: inline-flex; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.25); transition: all 0.3s cubic-bezier(.4,0,.2,1);" data-qty="' . $qtyVal . '" onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 4px 16px rgba(0,0,0,0.4)\';" onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.25)\';">';
+            echo '<button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 14px 0 0 14px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px;" onclick="setQty(' . $qtyVal . ');"><i class="fa fa-cube" style="margin-right: 4px; font-size: 10px; opacity: 0.8;"></i>' . $qtyVal . '</button>';
+            echo '<button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #764ba2, #f5576c); color: white; border: none; border-radius: 0 14px 14px 0; padding: 8px 8px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; line-height: 1; opacity: 0.85;" onclick="deleteQuickQty(' . $qtyVal . ', this);" onmouseover="this.style.opacity=\'1\';" onmouseout="this.style.opacity=\'0.85\';" title="Hapus ' . $qtyVal . '"><i class="fa fa-times"></i></button>';
             echo '</div>';
           }
           ?>
           <!-- Add Quick Qty Button -->
-          <button type="button" class="btn btn-sm" id="btnAddQty" style="background-color: #28a745; color: white; border: none; border-radius: 6px; padding: 8px 12px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;" onclick="showAddQtyInput();" onmouseover="this.style.backgroundColor='#218838'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#28a745'; this.style.transform='scale(1)';" title="Tambah Quick Qty"><i class="fa fa-plus"></i></button>
+          <button type="button" class="btn btn-sm" id="btnAddQty" style="background: linear-gradient(135deg, #4dbd74, #20c997); color: white; border: none; border-radius: 14px; padding: 8px 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); box-shadow: 0 2px 8px rgba(0,0,0,0.25);" onclick="showAddQtyInput();" onmouseover="this.style.transform='translateY(-2px) scale(1.05)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.25)';" title="Tambah Quick Qty"><i class="fa fa-plus" style="margin-right: 3px;"></i> Tambah</button>
           <!-- Add Qty Input (hidden by default) -->
-          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 4px;">
-            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 70px; border-radius: 6px; border: 2px solid #28a745; padding: 6px 8px; font-weight: 500; font-size: 13px; text-align: center;">
-            <button type="button" class="btn btn-sm" style="background-color: #28a745; color: white; border: none; border-radius: 6px; padding: 7px 10px; cursor: pointer; transition: all 0.3s ease;" onclick="addQuickQty();" title="Simpan"><i class="fa fa-check"></i></button>
-            <button type="button" class="btn btn-sm" style="background-color: #6c757d; color: white; border: none; border-radius: 6px; padding: 7px 10px; cursor: pointer; transition: all 0.3s ease;" onclick="hideAddQtyInput();" title="Batal"><i class="fa fa-times"></i></button>
+          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 6px; background: #343b41; padding: 6px 10px; border-radius: 14px; border: 2px solid #4dbd7455; box-shadow: 0 2px 10px rgba(0,0,0,0.25);">
+            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 65px; border-radius: 10px; border: 2px solid #4dbd74; padding: 6px 8px; font-weight: 700; font-size: 13px; text-align: center; background: #2f353a; color: #f3f4f5; transition: all 0.3s ease;" onfocus="this.style.boxShadow='0 0 0 3px rgba(77,189,116,0.25)';" onblur="this.style.boxShadow='none';">
+            <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #4dbd74, #20c997); color: white; border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="addQuickQty();" title="Simpan" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-check"></i></button>
+            <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #3a4149, #4a5568); color: #e4e7ea; border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="hideAddQtyInput();" title="Batal" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-times"></i></button>
           </div>
         </div>
       </div>
@@ -776,7 +801,17 @@ function GetVP(){
 
 // Set Qty from quick buttons
 function setQty(value) {
-  document.getElementById('qtyinput').value = value;
+  var input = document.getElementById('qtyinput');
+  input.value = value;
+  // Pulse animation feedback
+  input.style.borderColor = '#764ba2';
+  input.style.boxShadow = '0 0 0 3px rgba(118,75,162,0.35), 0 4px 12px rgba(0,0,0,0.3)';
+  input.style.transform = 'scale(1.08)';
+  setTimeout(function() {
+    input.style.borderColor = '#667eea88';
+    input.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+    input.style.transform = 'scale(1)';
+  }, 300);
 }
 
 // Set Profile from quick buttons
@@ -784,22 +819,30 @@ function setProfile(profileName) {
   var profSelect = document.getElementById('profselect');
   profSelect.value = profileName;
   
-  // Update button styling
-  var profileButtons = document.querySelectorAll('td button[onclick*="setProfile"]');
-  profileButtons.forEach(function(btn) {
-    var btnText = btn.textContent.trim();
-    if (btnText === profileName || btnText.substring(1) === profileName) {
-      btn.style.border = '3px solid #007bff';
-      btn.style.boxShadow = '0 0 8px rgba(0, 123, 255, 0.5)';
-      btn.style.backgroundColor = '#007bff';
+  // Update button styling using data attributes
+  var profileButtons = document.querySelectorAll('.prof-btn');
+  for (var i = 0; i < profileButtons.length; i++) {
+    var btn = profileButtons[i];
+    var btnProfile = btn.getAttribute('data-profile');
+    var gradFrom = btn.getAttribute('data-grad-from');
+    var gradTo = btn.getAttribute('data-grad-to');
+    
+    if (btnProfile === profileName) {
+      btn.classList.add('prof-active');
+      btn.style.background = 'linear-gradient(135deg, ' + gradFrom + ', ' + gradTo + ')';
       btn.style.color = 'white';
+      btn.style.border = '2px solid transparent';
+      btn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3), 0 0 0 3px ' + gradFrom + '88';
+      btn.style.transform = 'scale(1.05)';
     } else {
-      btn.style.border = '2px solid #e0e0e0';
+      btn.classList.remove('prof-active');
+      btn.style.background = 'linear-gradient(135deg, ' + gradFrom + '33, ' + gradTo + '33)';
+      btn.style.color = '#e4e7ea';
+      btn.style.border = '2px solid ' + gradFrom + '55';
       btn.style.boxShadow = 'none';
-      btn.style.backgroundColor = '#f0f0f0';
-      btn.style.color = '#333';
+      btn.style.transform = 'none';
     }
-  });
+  }
   
   updateComment();
 }
@@ -925,6 +968,13 @@ document.addEventListener('DOMContentLoaded', function() {
   var defaultProfile = '<?= isset($defaultProfile) ? $defaultProfile : '' ?>';
   if (defaultProfile && profSelect) {
     profSelect.value = defaultProfile;
+    // Mark default profile button as active
+    var profBtns = document.querySelectorAll('.prof-btn');
+    for (var i = 0; i < profBtns.length; i++) {
+      if (profBtns[i].getAttribute('data-profile') === defaultProfile) {
+        profBtns[i].classList.add('prof-active');
+      }
+    }
   }
 });
 

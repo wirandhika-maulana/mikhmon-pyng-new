@@ -1,0 +1,807 @@
+/*
+ * MIKHMON Modern UI Overlay
+ * Adds modern, futuristic styling on top of existing themes.
+ * Load AFTER the theme CSS file.
+ * Compatible with: dark, light, blue, green, pink themes.
+ */
+
+/* ================================================
+   1. TYPOGRAPHY & BASE
+   ================================================ */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+small {
+  font-size: 12px;
+}
+
+/* ================================================
+   2. NAVBAR
+   ================================================ */
+.navbar {
+  height: 56px;
+  border-bottom: none !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.navbar-left a {
+  padding: 16px 18px;
+  font-size: 15px;
+  transition: all 0.25s ease;
+}
+
+.navbar-right a {
+  padding: 16px 18px;
+  font-size: 13px;
+  transition: all 0.25s ease;
+}
+
+#brand {
+  font-size: 18px !important;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #20a8d8, #6f42c1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800 !important;
+}
+
+#cpage {
+  font-weight: 500;
+  opacity: 0.85;
+  font-size: 14px;
+}
+
+.navbar-hover:hover {
+  border-radius: 8px;
+}
+
+#logout:hover {
+  opacity: 0.8;
+}
+
+.ses, .dropd {
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.ses:hover, .dropd:hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ================================================
+   3. SIDEBAR
+   ================================================ */
+.sidenav {
+  margin-top: 57px;
+  border-right: none !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidenav a,
+.dropdown-btn {
+  border-radius: 8px !important;
+  margin: 3px 8px !important;
+  padding: 10px 12px !important;
+  font-size: 13px !important;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidenav a:hover,
+.dropdown-btn:hover {
+  transform: translateX(4px);
+  border-radius: 8px !important;
+}
+
+.sidenav .active {
+  border-radius: 8px !important;
+  position: relative;
+  font-weight: 600;
+}
+
+.sidenav .active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, #20a8d8, #6f42c1);
+  border-radius: 0 3px 3px 0;
+}
+
+.sidenav i {
+  font-size: 16px !important;
+  margin-right: 6px !important;
+  padding: 5px 0 5px 5px !important;
+  width: 24px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.dropdown-container {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.dropdown-container a,
+.dropdown-container .dropdown-btn {
+  margin-left: 16px !important;
+  font-size: 12.5px !important;
+}
+
+.spa {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
+  margin: 8px 12px !important;
+}
+
+/* Sidebar session header */
+.sidenav .card-header {
+  margin: 0 !important;
+  padding: 14px 12px !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15) !important;
+}
+
+.sidenav .card-header h3 {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+/* ================================================
+   4. MAIN CONTENT
+   ================================================ */
+#main {
+  margin-top: 57px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.main-container {
+  padding: 12px 15px 15px 15px !important;
+  animation: fadeInUp 0.35s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================================
+   5. CARDS & BOXES
+   ================================================ */
+.card {
+  border-radius: 12px !important;
+  border: 1px solid rgba(128, 128, 128, 0.12) !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.12) !important;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 12px 16px !important;
+}
+
+.card-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-header h3 i {
+  opacity: 0.7;
+}
+
+.card-body {
+  padding: 12px 16px !important;
+}
+
+.box {
+  border-radius: 10px !important;
+  padding: 14px !important;
+  transition: all 0.3s ease;
+}
+
+.box-bordered {
+  border: 1px solid rgba(128, 128, 128, 0.12) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.box-group-icon {
+  border-radius: 12px !important;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(128, 128, 128, 0.1) !important;
+}
+
+.box-group-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ================================================
+   6. BUTTONS
+   ================================================ */
+.btn {
+  border-radius: 8px !important;
+  padding: 5px 14px !important;
+  font-weight: 500;
+  font-size: 13px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Exclude custom-styled buttons from global overrides */
+.prof-btn {
+  border-radius: 20px !important;
+  box-shadow: none;
+  font-size: 12.5px;
+  margin: 0 !important;
+}
+
+.prof-btn:hover {
+  transform: none;
+  box-shadow: none !important;
+}
+
+.quick-qty-item .btn {
+  margin: 0 !important;
+  box-shadow: none;
+  border-radius: 0 !important;
+}
+
+.quick-qty-item .btn:first-child {
+  border-radius: 14px 0 0 14px !important;
+}
+
+.quick-qty-item .btn:last-child {
+  border-radius: 0 14px 14px 0 !important;
+}
+
+.quick-qty-item .btn:hover {
+  transform: none;
+}
+
+/* Gradient button styles */
+.bg-primary {
+  background: linear-gradient(135deg, #20a8d8, #1b8eb8) !important;
+}
+
+.bg-secondary {
+  background: linear-gradient(135deg, #73818f, #5c6873) !important;
+}
+
+.bg-success {
+  background: linear-gradient(135deg, #4dbd74, #3ea964) !important;
+}
+
+.bg-info {
+  background: linear-gradient(135deg, #63c2de, #4fb3d0) !important;
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #ffc107, #e8af00) !important;
+}
+
+.bg-danger {
+  background: linear-gradient(135deg, #f86c6b, #e55a59) !important;
+}
+
+.bg-pink {
+  background: linear-gradient(135deg, #e83e8c, #d63384) !important;
+}
+
+.bg-purple {
+  background: linear-gradient(135deg, #6f42c1, #5e35b1) !important;
+}
+
+.bg-dark {
+  background: linear-gradient(135deg, #343b41, #2a3035) !important;
+}
+
+.btn-login {
+  border-radius: 8px !important;
+  font-weight: 600;
+  padding: 10px 24px !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-login:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ================================================
+   7. TABLES
+   ================================================ */
+.table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+}
+
+.table td,
+.table th {
+  padding: 10px 12px !important;
+  vertical-align: middle;
+  transition: background-color 0.2s ease;
+}
+
+.table-bordered {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border-color: rgba(128, 128, 128, 0.1) !important;
+}
+
+.table-hover:hover tbody tr:hover {
+  transition: background-color 0.2s ease;
+}
+
+/* Sticky table header */
+.tscroll thead {
+  z-index: 5;
+}
+
+/* ================================================
+   8. FORM CONTROLS
+   ================================================ */
+.form-control {
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(128, 128, 128, 0.2) !important;
+  transition: all 0.25s ease !important;
+  font-size: 13px;
+}
+
+.form-control:focus {
+  border-color: #20a8d8 !important;
+  box-shadow: 0 0 0 3px rgba(32, 168, 216, 0.15) !important;
+  outline: none;
+}
+
+select.form-control {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2399a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px !important;
+}
+
+.group-item {
+  border-radius: 0 !important;
+  transition: all 0.25s ease;
+}
+
+.group-item-l {
+  border-radius: 8px 0 0 8px !important;
+}
+
+.group-item-r {
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.group-item:focus {
+  border-color: #20a8d8 !important;
+  box-shadow: 0 0 0 3px rgba(32, 168, 216, 0.15);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+textarea {
+  transition: all 0.25s ease;
+}
+
+/* ================================================
+   9. SCROLLBAR
+   ================================================ */
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+  border: none !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.3) !important;
+  border-radius: 10px !important;
+  border: none !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.5) !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* ================================================
+   10. LOADING SPINNER
+   ================================================ */
+.lds-dual-ring {
+  z-index: 50;
+}
+
+.lds-dual-ring:after {
+  border-width: 3px !important;
+  border-color: #20a8d8 transparent !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+
+/* ================================================
+   11. NOTIFICATIONS
+   ================================================ */
+#notify {
+  border-radius: 10px !important;
+  border: none !important;
+  padding: 10px 16px !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 500;
+  font-size: 13px;
+  z-index: 9999 !important;
+}
+
+/* ================================================
+   12. MODALS
+   ================================================ */
+.modal-window {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.modal-window > div {
+  border-radius: 14px !important;
+  border: 1px solid rgba(128, 128, 128, 0.15) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-close {
+  border-radius: 0 14px 0 10px !important;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.modal-close:hover {
+  transform: scale(1.05);
+}
+
+/* ================================================
+   13. ALERTS
+   ================================================ */
+.alert {
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-weight: 500;
+}
+
+/* ================================================
+   14. PROGRESS BARS
+   ================================================ */
+.progress {
+  border-radius: 8px !important;
+  overflow: hidden;
+  height: 8px;
+}
+
+.progress-bar,
+.progress-bar-blue,
+.progress-bar-red {
+  border-radius: 8px !important;
+  transition: width 0.5s ease;
+}
+
+/* ================================================
+   15. UTILITY OVERRIDES
+   ================================================ */
+.radius-3 {
+  border-radius: 8px !important;
+}
+
+.radius-5 {
+  border-radius: 10px !important;
+}
+
+.radius-l-3 {
+  border-radius: 8px 0 0 8px !important;
+}
+
+.radius-r-3 {
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.radius-l-5 {
+  border-radius: 10px 0 0 10px !important;
+}
+
+.radius-r-5 {
+  border-radius: 0 10px 10px 0 !important;
+}
+
+.radius-b-3 {
+  border-radius: 0 0 8px 8px !important;
+}
+
+/* ================================================
+   16. DASHBOARD BOX ICONS
+   ================================================ */
+.box-group-icon {
+  border-radius: 14px !important;
+  font-size: 32px !important;
+  padding: 12px 14px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.box-group-icon i {
+  transition: transform 0.3s ease;
+}
+
+.box-group-icon:hover i {
+  transform: scale(1.1);
+}
+
+/* ================================================
+   17. RESPONSIVE IMPROVEMENTS
+   ================================================ */
+@media screen and (max-width: 750px) {
+  .navbar {
+    height: 50px;
+  }
+
+  .navbar-left a {
+    padding: 13px 12px;
+  }
+
+  .navbar-right a {
+    padding: 13px 10px;
+    font-size: 12px;
+  }
+
+  .sidenav {
+    margin-top: 51px;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.25);
+  }
+
+  #main {
+    margin-top: 51px;
+  }
+
+  .main-container {
+    padding: 8px !important;
+  }
+
+  .card {
+    border-radius: 10px !important;
+    margin: 3px !important;
+  }
+
+  .card-header {
+    padding: 10px 12px !important;
+  }
+
+  .card-body {
+    padding: 8px 12px !important;
+  }
+
+  .btn {
+    padding: 5px 10px !important;
+    font-size: 12px;
+    margin: 3px !important;
+  }
+
+  .table td,
+  .table th {
+    padding: 6px 8px !important;
+    font-size: 12px;
+  }
+
+  .box {
+    margin: 3px !important;
+    padding: 10px !important;
+  }
+
+  .modal-window > div {
+    width: 92% !important;
+    margin: 5% auto !important;
+    border-radius: 12px !important;
+  }
+
+  /* Stack columns better on mobile */
+  .col-6 {
+    margin-bottom: 8px;
+  }
+}
+
+/* Tablet adjustments */
+@media screen and (min-width: 751px) and (max-width: 1024px) {
+  .main-container {
+    padding: 10px !important;
+  }
+
+  .card {
+    margin: 4px !important;
+  }
+}
+
+/* ================================================
+   18. SMOOTH TRANSITIONS EVERYWHERE
+   ================================================ */
+a {
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* ================================================
+   19. FILTER / SEARCH INPUT ENHANCEMENT
+   ================================================ */
+#filterTable {
+  border-radius: 20px !important;
+  padding: 8px 16px !important;
+  border: 2px solid rgba(128, 128, 128, 0.15) !important;
+  transition: all 0.3s ease !important;
+  font-size: 13px;
+}
+
+#filterTable:focus {
+  border-color: #20a8d8 !important;
+  box-shadow: 0 0 0 3px rgba(32, 168, 216, 0.15) !important;
+}
+
+/* ================================================
+   20. OVERFLOW TABLE CONTAINER
+   ================================================ */
+.overflow {
+  border-radius: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+/* ================================================
+   21. LOGIN PAGE ENHANCEMENTS
+   ================================================ */
+.login-box,
+.register-box {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.login-box .card,
+.register-box .card {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ================================================
+   22. SELECTION HIGHLIGHT
+   ================================================ */
+::selection {
+  background: rgba(32, 168, 216, 0.3);
+}
+
+::-moz-selection {
+  background: rgba(32, 168, 216, 0.3);
+}
+
+/* ================================================
+   23. PACE LOADER OVERRIDE
+   ================================================ */
+.pace .pace-progress {
+  height: 3px !important;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ================================================
+   24. TOOLTIP-STYLE TITLES
+   ================================================ */
+[title] {
+  cursor: help;
+}
+
+.btn[title],
+a[title] {
+  cursor: pointer;
+}
+
+/* ================================================
+   25. PRINT STYLES — Don't apply modern styles when printing
+   ================================================ */
+@media print {
+  .navbar,
+  .sidenav,
+  #notify {
+    display: none !important;
+  }
+
+  #main {
+    margin: 0 !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+
+  .btn {
+    box-shadow: none !important;
+  }
+}
