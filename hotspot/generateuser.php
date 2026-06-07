@@ -593,13 +593,21 @@ date_default_timezone_set($_SESSION['timezone']);
             $gradFrom = $profileColors[$colorIdx][0];
             $gradTo = $profileColors[$colorIdx][1];
             
+            if ($theme == 'dark') {
+              $bgAlpha = '33'; // ~20%
+              $textColor = '#e4e7ea';
+            } else {
+              $bgAlpha = '11'; // ~7%
+              $textColor = '#444444';
+            }
+
             if ($isSelected) {
               $btnStyle = "background: linear-gradient(135deg, {$gradFrom}, {$gradTo}); color: white; border: 2px solid transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 3px {$gradFrom}88; transform: scale(1.05);";
             } else {
-              $btnStyle = "background: linear-gradient(135deg, {$gradFrom}33, {$gradTo}33); color: #e4e7ea; border: 2px solid {$gradFrom}55;";
+              $btnStyle = "background: linear-gradient(135deg, {$gradFrom}{$bgAlpha}, {$gradTo}{$bgAlpha}); color: {$textColor}; border: 2px solid {$gradFrom}55;";
             }
             
-            echo "<button type='button' class='prof-btn' data-profile='" . htmlspecialchars($profileName) . "' data-grad-from='{$gradFrom}' data-grad-to='{$gradTo}' style='{$btnStyle} border-radius: 20px; padding: 8px 18px; font-weight: 600; font-size: 12.5px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); letter-spacing: 0.3px; position: relative; overflow: hidden;' onclick=\"setProfile('" . htmlspecialchars($profileName) . "'); GetVP();\" onmouseover=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}, {$gradTo})'; this.style.color='white'; this.style.boxShadow='0 4px 15px {$gradFrom}66'; this.style.transform='translateY(-2px) scale(1.03)';}\" onmouseout=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}33, {$gradTo}33)'; this.style.color='#e4e7ea'; this.style.boxShadow='none'; this.style.transform='none';}\">";
+            echo "<button type='button' class='prof-btn' data-profile='" . htmlspecialchars($profileName) . "' data-grad-from='{$gradFrom}' data-grad-to='{$gradTo}' style='{$btnStyle} border-radius: 20px; padding: 8px 18px; font-weight: 600; font-size: 12.5px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); letter-spacing: 0.3px; position: relative; overflow: hidden;' onclick=\"setProfile('" . htmlspecialchars($profileName) . "'); GetVP();\" onmouseover=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}, {$gradTo})'; this.style.color='white'; this.style.boxShadow='0 4px 15px {$gradFrom}66'; this.style.transform='translateY(-2px) scale(1.03)';}\" onmouseout=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}{$bgAlpha}, {$gradTo}{$bgAlpha})'; this.style.color='{$textColor}'; this.style.boxShadow='none'; this.style.transform='none';}\">";
             echo "<i class='fa fa-wifi' style='margin-right: 5px; font-size: 10px;'></i>";
             echo htmlspecialchars(substr($profileName, 0, 18));
             echo "</button>";
@@ -614,7 +622,7 @@ date_default_timezone_set($_SESSION['timezone']);
     <td>
       <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 4px 0;">
         <div style="position: relative; width: 100px;">
-          <input class="form-control" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" style="border-radius: 12px; border: 2px solid #667eea88; padding: 9px 14px; font-weight: 700; font-size: 15px; text-align: center; background: #2f353a; color: #f3f4f5; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;" onfocus="this.style.borderColor='#764ba2'; this.style.boxShadow='0 0 0 3px rgba(118,75,162,0.25), 0 4px 12px rgba(0,0,0,0.3)';" onblur="this.style.borderColor='#667eea88'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';">
+          <input class="form-control" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" style="border-radius: 12px; border: 2px solid #667eea88; padding: 9px 14px; font-weight: 700; font-size: 15px; text-align: center; background: var(--modern-input-bg); color: var(--modern-input-text); box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;" onfocus="this.style.borderColor='#764ba2'; this.style.boxShadow='0 0 0 3px rgba(118,75,162,0.25), 0 4px 12px rgba(0,0,0,0.3)';" onblur="this.style.borderColor='#667eea88'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';">
         </div>
         <div id="quickQtyContainer" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           <?php 
@@ -628,10 +636,10 @@ date_default_timezone_set($_SESSION['timezone']);
           <!-- Add Quick Qty Button -->
           <button type="button" class="btn btn-sm" id="btnAddQty" style="background: linear-gradient(135deg, #4dbd74, #20c997); color: white; border: none; border-radius: 14px; padding: 8px 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); box-shadow: 0 2px 8px rgba(0,0,0,0.25);" onclick="showAddQtyInput();" onmouseover="this.style.transform='translateY(-2px) scale(1.05)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.25)';" title="Tambah Quick Qty"><i class="fa fa-plus" style="margin-right: 3px;"></i> Tambah</button>
           <!-- Add Qty Input (hidden by default) -->
-          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 6px; background: #343b41; padding: 6px 10px; border-radius: 14px; border: 2px solid #4dbd7455; box-shadow: 0 2px 10px rgba(0,0,0,0.25);">
-            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 65px; border-radius: 10px; border: 2px solid #4dbd74; padding: 6px 8px; font-weight: 700; font-size: 13px; text-align: center; background: #2f353a; color: #f3f4f5; transition: all 0.3s ease;" onfocus="this.style.boxShadow='0 0 0 3px rgba(77,189,116,0.25)';" onblur="this.style.boxShadow='none';">
+          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 6px; background: var(--modern-wrapper-bg); padding: 6px 10px; border-radius: 14px; border: 2px solid #4dbd7455; box-shadow: 0 2px 10px rgba(0,0,0,0.25);">
+            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 65px; border-radius: 10px; border: 2px solid #4dbd74; padding: 6px 8px; font-weight: 700; font-size: 13px; text-align: center; background: var(--modern-input-bg); color: var(--modern-input-text); transition: all 0.3s ease;" onfocus="this.style.boxShadow='0 0 0 3px rgba(77,189,116,0.25)';" onblur="this.style.boxShadow='none';">
             <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #4dbd74, #20c997); color: white; border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="addQuickQty();" title="Simpan" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-check"></i></button>
-            <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #3a4149, #4a5568); color: #e4e7ea; border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="hideAddQtyInput();" title="Batal" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-times"></i></button>
+            <button type="button" class="btn btn-sm" style="background: var(--modern-btn-cancel-bg); color: var(--modern-btn-cancel-text); border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="hideAddQtyInput();" title="Batal" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-times"></i></button>
           </div>
         </div>
       </div>

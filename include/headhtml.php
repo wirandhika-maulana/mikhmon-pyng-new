@@ -52,7 +52,7 @@ error_reporting(0);
 
 		
 	</head>
-	<body>
+	<body class="theme-<?= $theme; ?>">
 		<div class="wrapper">
 
 			
