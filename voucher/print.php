@@ -65,6 +65,10 @@ if (!isset($_SESSION["mikhmon"])) {
     $usermode = explode('-', $id)[0];
     $getuser = $API->comm('/ip/hotspot/user/print', array("?comment" => "$id", "?uptime" => "0s"));
     $TotalReg = count($getuser);
+  } elseif ($_GET['profileprint'] != "") {
+    $profile_print = $_GET['profileprint'];
+    $getuser = $API->comm('/ip/hotspot/user/print', array("?profile" => "$profile_print", "?uptime" => "0s"));
+    $TotalReg = count($getuser);
   }
   $getuprofile = $getuser[0]['profile'];
 

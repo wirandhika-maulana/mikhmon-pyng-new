@@ -467,6 +467,63 @@ date_default_timezone_set($_SESSION['timezone']);
 </div>
 </div>
 
+<!-- Quick Print Panel -->
+<div class="row" style="margin-bottom: 15px;">
+<div class="col-12">
+	<div class="card" style="border: 2px solid #17a2b8; border-radius: 10px; overflow: hidden;">
+		<div class="card-header" style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 12px 20px; cursor: pointer;" onclick="toggleQuickPrint();">
+			<h3 style="margin: 0; display: flex; align-items: center; justify-content: space-between;">
+				<span><i class="fa fa-print"></i> Quick Print</span>
+				<i class="fa fa-chevron-down" id="quickPrintChevron" style="transition: transform 0.3s ease;"></i>
+			</h3>
+		</div>
+		<div class="card-body" id="quickPrintBody" style="display: none; padding: 15px;">
+			<div class="row">
+				<!-- Print by Comment -->
+				<div class="col-6">
+					<div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px;">
+						<label style="font-weight: 600; font-size: 14px; color: #17a2b8; display: block; margin-bottom: 10px;"><i class="fa fa-comments"></i> Print by Comment</label>
+						<div style="display: flex; gap: 8px; margin-bottom: 12px;">
+							<select id="qpCommentSelect" class="form-control" style="flex: 1; border-radius: 6px; padding: 8px 12px;">
+								<option value="">Pilih Comment...</option>
+							</select>
+							<button class="btn bg-secondary" onclick="loadCommentsForPrint()" title="Refresh Comments" style="border-radius: 6px;"><i class="fa fa-refresh"></i></button>
+						</div>
+						<div style="display: flex; gap: 8px;">
+							<button class="btn" style="flex: 1; background: #007bff; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('comment', 'no', 'no')"><i class="fa fa-print"></i> Default</button>
+							<button class="btn" style="flex: 1; background: #dc3545; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('comment', 'yes', 'no')"><i class="fa fa-qrcode"></i> QR</button>
+							<button class="btn" style="flex: 1; background: #28a745; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('comment', 'no', 'yes')"><i class="fa fa-print"></i> Small</button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Print by Profile -->
+				<div class="col-6">
+					<div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px;">
+						<label style="font-weight: 600; font-size: 14px; color: #17a2b8; display: block; margin-bottom: 10px;"><i class="fa fa-tag"></i> Print by Profile</label>
+						<div style="display: flex; gap: 8px; margin-bottom: 12px;">
+							<select id="qpProfileSelect" class="form-control" style="flex: 1; border-radius: 6px; padding: 8px 12px;">
+								<option value="">Pilih Profile...</option>
+								<?php 
+								for ($i = 0; $i < count($getprofile); $i++) {
+									echo "<option value='" . htmlspecialchars($getprofile[$i]['name']) . "'>" . htmlspecialchars($getprofile[$i]['name']) . "</option>";
+								}
+								?>
+							</select>
+						</div>
+						<div style="display: flex; gap: 8px;">
+							<button class="btn" style="flex: 1; background: #007bff; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('profile', 'no', 'no')"><i class="fa fa-print"></i> Default</button>
+							<button class="btn" style="flex: 1; background: #dc3545; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('profile', 'yes', 'no')"><i class="fa fa-qrcode"></i> QR</button>
+							<button class="btn" style="flex: 1; background: #28a745; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('profile', 'no', 'yes')"><i class="fa fa-print"></i> Small</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
 <div class="row">
 <div class="col-8">
 <div class="card box-bordered">
@@ -1070,6 +1127,100 @@ function executeQuickGen(preset) {
   
   // Submit the form
   form.submit();
+}
+
+// Quick Print Logic
+function toggleQuickPrint() {
+  var body = document.getElementById('quickPrintBody');
+  var chevron = document.getElementById('quickPrintChevron');
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    body.style.opacity = '0';
+    body.style.transition = 'opacity 0.3s ease';
+    setTimeout(function() { body.style.opacity = '1'; }, 10);
+    chevron.style.transform = 'rotate(180deg)';
+    
+    // Auto load comments if empty
+    if (document.getElementById('qpCommentSelect').options.length <= 1) {
+      loadCommentsForPrint();
+    }
+  } else {
+    body.style.opacity = '0';
+    setTimeout(function() { body.style.display = 'none'; }, 300);
+    chevron.style.transform = 'rotate(0deg)';
+  }
+}
+
+function loadCommentsForPrint() {
+  var select = document.getElementById('qpCommentSelect');
+  select.innerHTML = '<option value="">Loading...</option>';
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', './process/getcomments.php?session=<?= $session; ?>', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      try {
+        var resp = JSON.parse(xhr.responseText);
+        select.innerHTML = '<option value="">Pilih Comment...</option>';
+        var currentGen = '<?= $urlprint ?>';
+        
+        var foundCurrent = false;
+        if (currentGen) {
+          for (var i = 0; i < resp.length; i++) {
+            if (resp[i].comment === currentGen) {
+              foundCurrent = true;
+              break;
+            }
+          }
+        }
+        
+        if (currentGen && !foundCurrent) {
+          var opt = document.createElement('option');
+          opt.value = currentGen;
+          opt.textContent = currentGen + ' (Baru)';
+          select.appendChild(opt);
+        }
+        
+        for (var j = 0; j < resp.length; j++) {
+          var item = resp[j];
+          var opt2 = document.createElement('option');
+          opt2.value = item.comment;
+          opt2.textContent = item.comment + ' [' + item.count + ' user]';
+          if (item.comment === currentGen) {
+            opt2.selected = true;
+          }
+          select.appendChild(opt2);
+        }
+      } catch (e) {
+        select.innerHTML = '<option value="">Gagal memuat</option>';
+      }
+    }
+  };
+  xhr.send();
+}
+
+function doQuickPrint(by, qr, small) {
+  var val = '';
+  var url = '';
+  
+  if (by === 'comment') {
+    val = document.getElementById('qpCommentSelect').value;
+    if (!val) {
+      alert('Pilih comment terlebih dahulu!');
+      return;
+    }
+    url = "./voucher/print.php?id=" + encodeURIComponent(val) + "&qr=" + qr + "&small=" + small + "&session=<?= $session; ?>";
+  } else {
+    val = document.getElementById('qpProfileSelect').value;
+    if (!val) {
+      alert('Pilih profile terlebih dahulu!');
+      return;
+    }
+    url = "./voucher/print.php?profileprint=" + encodeURIComponent(val) + "&qr=" + qr + "&small=" + small + "&session=<?= $session; ?>";
+  }
+  
+  var win = window.open(url, '_blank');
+  win.focus();
 }
 </script>
 </div>
