@@ -19,8 +19,8 @@ $API = new RouterosAPI();
 $API->debug = false;
 $API->connect($iphost, $userhost, decrypt($passwdhost));
 
-// Get users
-$getuser = $API->comm("/ip/hotspot/user/print", array("?limit-uptime" => "0s"));
+// Get users that haven't been used yet
+$getuser = $API->comm("/ip/hotspot/user/print", array("?uptime" => "0s"));
 $TotalReg = count($getuser);
 
 $acomment = "";

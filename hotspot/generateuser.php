@@ -479,42 +479,41 @@ date_default_timezone_set($_SESSION['timezone']);
 		</div>
 		<div class="card-body" id="quickPrintBody" style="display: none; padding: 15px;">
 			<div class="row">
-				<!-- Print by Comment -->
+				<!-- Print Baru (Last Generate) -->
 				<div class="col-6">
 					<div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px;">
-						<label style="font-weight: 600; font-size: 14px; color: #17a2b8; display: block; margin-bottom: 10px;"><i class="fa fa-comments"></i> Print by Comment</label>
+						<label style="font-weight: 600; font-size: 14px; color: #17a2b8; display: block; margin-bottom: 10px;"><i class="fa fa-bolt"></i> Print by Comment (Baru)</label>
 						<div style="display: flex; gap: 8px; margin-bottom: 12px;">
-							<select id="qpCommentSelect" class="form-control" style="flex: 1; border-radius: 6px; padding: 8px 12px;">
+							<select id="qpCommentBaru" class="form-control" style="flex: 1; border-radius: 6px; padding: 8px 12px;">
+								<?php if ($urlprint) { ?>
+									<option value="<?= htmlspecialchars($urlprint) ?>" selected><?= htmlspecialchars($urlprint) ?> (Baru)</option>
+								<?php } else { ?>
+									<option value="">Belum ada generate baru</option>
+								<?php } ?>
+							</select>
+						</div>
+						<div style="display: flex; gap: 8px;">
+							<button class="btn" style="flex: 1; background: #007bff; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('baru', 'no', 'no')"><i class="fa fa-print"></i> Default</button>
+							<button class="btn" style="flex: 1; background: #dc3545; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('baru', 'yes', 'no')"><i class="fa fa-qrcode"></i> QR</button>
+							<button class="btn" style="flex: 1; background: #28a745; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('baru', 'no', 'yes')"><i class="fa fa-print"></i> Small</button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Print Semua (History) -->
+				<div class="col-6">
+					<div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px;">
+						<label style="font-weight: 600; font-size: 14px; color: #17a2b8; display: block; margin-bottom: 10px;"><i class="fa fa-history"></i> Print by Comment (Semua)</label>
+						<div style="display: flex; gap: 8px; margin-bottom: 12px;">
+							<select id="qpCommentSemua" class="form-control" style="flex: 1; border-radius: 6px; padding: 8px 12px;">
 								<option value="">Pilih Comment...</option>
 							</select>
 							<button class="btn bg-secondary" onclick="loadCommentsForPrint()" title="Refresh Comments" style="border-radius: 6px;"><i class="fa fa-refresh"></i></button>
 						</div>
 						<div style="display: flex; gap: 8px;">
-							<button class="btn" style="flex: 1; background: #007bff; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('comment', 'no', 'no')"><i class="fa fa-print"></i> Default</button>
-							<button class="btn" style="flex: 1; background: #dc3545; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('comment', 'yes', 'no')"><i class="fa fa-qrcode"></i> QR</button>
-							<button class="btn" style="flex: 1; background: #28a745; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('comment', 'no', 'yes')"><i class="fa fa-print"></i> Small</button>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Print by Profile -->
-				<div class="col-6">
-					<div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px;">
-						<label style="font-weight: 600; font-size: 14px; color: #17a2b8; display: block; margin-bottom: 10px;"><i class="fa fa-tag"></i> Print by Profile</label>
-						<div style="display: flex; gap: 8px; margin-bottom: 12px;">
-							<select id="qpProfileSelect" class="form-control" style="flex: 1; border-radius: 6px; padding: 8px 12px;">
-								<option value="">Pilih Profile...</option>
-								<?php 
-								for ($i = 0; $i < count($getprofile); $i++) {
-									echo "<option value='" . htmlspecialchars($getprofile[$i]['name']) . "'>" . htmlspecialchars($getprofile[$i]['name']) . "</option>";
-								}
-								?>
-							</select>
-						</div>
-						<div style="display: flex; gap: 8px;">
-							<button class="btn" style="flex: 1; background: #007bff; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('profile', 'no', 'no')"><i class="fa fa-print"></i> Default</button>
-							<button class="btn" style="flex: 1; background: #dc3545; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('profile', 'yes', 'no')"><i class="fa fa-qrcode"></i> QR</button>
-							<button class="btn" style="flex: 1; background: #28a745; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('profile', 'no', 'yes')"><i class="fa fa-print"></i> Small</button>
+							<button class="btn" style="flex: 1; background: #007bff; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('semua', 'no', 'no')"><i class="fa fa-print"></i> Default</button>
+							<button class="btn" style="flex: 1; background: #dc3545; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('semua', 'yes', 'no')"><i class="fa fa-qrcode"></i> QR</button>
+							<button class="btn" style="flex: 1; background: #28a745; color: white; border-radius: 6px; font-weight: 600;" onclick="doQuickPrint('semua', 'no', 'yes')"><i class="fa fa-print"></i> Small</button>
 						</div>
 					</div>
 				</div>
@@ -1141,7 +1140,7 @@ function toggleQuickPrint() {
     chevron.style.transform = 'rotate(180deg)';
     
     // Auto load comments if empty
-    if (document.getElementById('qpCommentSelect').options.length <= 1) {
+    if (document.getElementById('qpCommentSemua').options.length <= 1) {
       loadCommentsForPrint();
     }
   } else {
@@ -1152,7 +1151,7 @@ function toggleQuickPrint() {
 }
 
 function loadCommentsForPrint() {
-  var select = document.getElementById('qpCommentSelect');
+  var select = document.getElementById('qpCommentSemua');
   select.innerHTML = '<option value="">Loading...</option>';
   
   var xhr = new XMLHttpRequest();
@@ -1164,32 +1163,15 @@ function loadCommentsForPrint() {
         select.innerHTML = '<option value="">Pilih Comment...</option>';
         var currentGen = '<?= $urlprint ?>';
         
-        var foundCurrent = false;
-        if (currentGen) {
-          for (var i = 0; i < resp.length; i++) {
-            if (resp[i].comment === currentGen) {
-              foundCurrent = true;
-              break;
-            }
-          }
-        }
-        
-        if (currentGen && !foundCurrent) {
-          var opt = document.createElement('option');
-          opt.value = currentGen;
-          opt.textContent = currentGen + ' (Baru)';
-          select.appendChild(opt);
-        }
-        
         for (var j = 0; j < resp.length; j++) {
           var item = resp[j];
-          var opt2 = document.createElement('option');
-          opt2.value = item.comment;
-          opt2.textContent = item.comment + ' [' + item.count + ' user]';
+          var opt = document.createElement('option');
+          opt.value = item.comment;
+          opt.textContent = item.comment + ' [' + item.count + ' user]';
           if (item.comment === currentGen) {
-            opt2.selected = true;
+            opt.selected = true;
           }
-          select.appendChild(opt2);
+          select.appendChild(opt);
         }
       } catch (e) {
         select.innerHTML = '<option value="">Gagal memuat</option>';
@@ -1203,20 +1185,20 @@ function doQuickPrint(by, qr, small) {
   var val = '';
   var url = '';
   
-  if (by === 'comment') {
-    val = document.getElementById('qpCommentSelect').value;
+  if (by === 'baru') {
+    val = document.getElementById('qpCommentBaru').value;
+    if (!val) {
+      alert('Belum ada generate baru!');
+      return;
+    }
+    url = "./voucher/print.php?id=" + encodeURIComponent(val) + "&qr=" + qr + "&small=" + small + "&session=<?= $session; ?>";
+  } else if (by === 'semua') {
+    val = document.getElementById('qpCommentSemua').value;
     if (!val) {
       alert('Pilih comment terlebih dahulu!');
       return;
     }
     url = "./voucher/print.php?id=" + encodeURIComponent(val) + "&qr=" + qr + "&small=" + small + "&session=<?= $session; ?>";
-  } else {
-    val = document.getElementById('qpProfileSelect').value;
-    if (!val) {
-      alert('Pilih profile terlebih dahulu!');
-      return;
-    }
-    url = "./voucher/print.php?profileprint=" + encodeURIComponent(val) + "&qr=" + qr + "&small=" + small + "&session=<?= $session; ?>";
   }
   
   var win = window.open(url, '_blank');
