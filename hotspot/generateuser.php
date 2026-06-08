@@ -378,14 +378,14 @@ date_default_timezone_set($_SESSION['timezone']);
 }
 
 .gen-header-icon {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     background: rgba(255,255,255,0.2);
-    border-radius: 14px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 20px;
     color: #fff;
     backdrop-filter: blur(10px);
     z-index: 1;
@@ -402,7 +402,7 @@ date_default_timezone_set($_SESSION['timezone']);
 
 .gen-header-text h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 700;
     color: #fff;
     letter-spacing: -0.3px;
