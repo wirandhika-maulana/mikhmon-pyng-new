@@ -15,6 +15,8 @@ if (!isset($_SESSION["mikhmon"])) {
         include_once(__DIR__ . '/../lang/'.$langid.'.php');
     }
 
+    // Include RouterOS API class for AJAX reload
+    include_once(__DIR__ . '/../lib/routeros_api.class.php');
     $API = new RouterosAPI();
     $API->debug = false;
 

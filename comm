@@ -1,0 +1,4 @@
+71:  $API->debug = false;
+107:      $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+109:      $API->connect($iphost, $userhost, decrypt($passwdhost));
+112:  $getidentity = $API->comm("/system/identity/print");

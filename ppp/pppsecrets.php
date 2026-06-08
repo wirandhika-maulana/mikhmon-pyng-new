@@ -34,29 +34,19 @@ if (!isset($_SESSION["mikhmon"])) {
 		$getsecret = $API->comm("/ppp/secret/print");
         if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
-
-		$countsecret = $API->comm("/ppp/secret/print", array(
-			"count-only" => ""
-		));
+		$countsecret = $TotalReg;
 	} elseif ($prof == "") {
 		$getsecret = $API->comm("/ppp/secret/print");
         if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
-
-		$countsecret = $API->comm("/ppp/secret/print", array(
-			"count-only" => ""
-		));
+		$countsecret = $TotalReg;
 	} elseif ($prof != "all") {
 		$getsecret = $API->comm("/ppp/secret/print", array(
 			"?profile" => "$prof",
 		));
         if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
-
-		$countsecret = $API->comm("/ppp/secret/print", array(
-			"count-only" => "",
-			"?profile" => "$prof",
-		));
+		$countsecret = $TotalReg;
 	}
 	if ($comm != "") {
 		$getsecret = $API->comm("/ppp/secret/print", array(
@@ -65,11 +55,7 @@ if (!isset($_SESSION["mikhmon"])) {
 		));
         if (!is_array($getsecret)) $getsecret = [];
 		$TotalReg = count($getsecret);
-
-		$countsecret = $API->comm("/ppp/secret/print", array(
-			"count-only" => "",
-			"?comment" => "$comm",
-		));
+		$countsecret = $TotalReg;
 	}
 	$getprofile = $API->comm("/ppp/profile/print");
 	$TotalReg2 = count($getprofile);
@@ -146,15 +132,26 @@ if (!isset($_SESSION["mikhmon"])) {
 							<tr>
 								<?php
 
+								// Optimize: Fetch all netwatch hosts ONCE
+								$all_netwatch_raw = $API->comm("/tool/netwatch/print");
+								$netwatch_hosts = [];
+								if (is_array($all_netwatch_raw)) {
+									foreach ($all_netwatch_raw as $nw) {
+										if (isset($nw['host'])) {
+											$netwatch_hosts[$nw['host']] = true;
+										}
+									}
+								}
+
 								for ($i = 0; $i < $TotalReg; $i++) {
 								?>
 									<td style='text-align:center;'><i class='fa fa-minus-square text-danger pointer' onclick="if(confirm('Are you sure to delete secret (<?= $getsecret[$i]['name']; ?>)?')){loadpage('./?remove-pppsecret=<?= $getsecret[$i]['.id']; ?>&rempname=<?= $getsecret[$i]['name']; ?>&session=<?= $session; ?>')}else{}" title='Delete/Hapus User  <?= $getsecret[$i]['name']; ?>'></i>
 										<?php
 										
 										$toaddr=$getsecret[$i]['remote-address'];
-										$ceknetwatch = $API->comm("/tool/netwatch/print",["?host" => "$toaddr"]);
+										$is_netwatched = isset($netwatch_hosts[$toaddr]);
 
-										if (empty($ceknetwatch)) {
+										if (!$is_netwatched) {
 											echo "&nbsp&nbsp&nbsp<a title='Netwatch User ".$getsecret[$i]['name']."\nIp ".$toaddr."\nKlik untuk melakukan Netwatch' href='./?interface=add-netwatch&iphost=".$toaddr."&flag=D&session=".$session."'><i class='fa fa-cubes text-warning pointer' aria-hidden='true'></i></a>";
 										}else{
 											echo "&nbsp&nbsp&nbsp<a href='./?interface=netwatch&session=".$session."'><span style='cursor:pointer;' title='Ip ".$toaddr."\nSudah di Netwatch.'><i class='fa fa-cubes text-grren pointer' aria-hidden='true'></i></span>";

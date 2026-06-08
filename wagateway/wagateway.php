@@ -408,7 +408,7 @@ input:checked + .slider:before { transform: translateX(26px); }
                         <i class="fa fa-link"></i>
                     </div>
                     <div class="wa-header-text">
-                        <h3 style="font-size: 17px;">Webhook Router</h3>
+                        <h3 style="font-size: 14px;">Webhook Router</h3>
                     </div>
                 </div>
                 <div class="wa-body" style="padding: 24px;">
@@ -433,7 +433,7 @@ input:checked + .slider:before { transform: translateX(26px); }
                         <i class="fa fa-paper-plane"></i>
                     </div>
                     <div class="wa-header-text">
-                        <h3 style="font-size: 17px;">Test Connection</h3>
+                        <h3 style="font-size: 14px;">Test Connection</h3>
                     </div>
                 </div>
                 <div class="wa-body" style="padding: 24px;">

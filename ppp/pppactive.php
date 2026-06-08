@@ -15,6 +15,8 @@ if (!isset($_SESSION["mikhmon"])) {
 	    include_once(__DIR__ . '/../lang/'.$langid.'.php');
     }
 
+    // Include RouterOS API class for AJAX reload
+    include_once(__DIR__ . '/../lib/routeros_api.class.php');
 	$API = new RouterosAPI();
 	$API->debug = false;
 
@@ -34,9 +36,11 @@ if (!isset($_SESSION["mikhmon"])) {
 
 	// Connect to dual router if available, otherwise main router
 	if (!empty($dual_router_ip)) {
-		$API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+		$conn_result = $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+        error_log("pppactive AJAX connect dual: ip=$dual_router_ip session=$session result=$conn_result");
 	} else {
-		$API->connect($iphost, $userhost, decrypt($passwdhost));
+		$conn_result = $API->connect($iphost, $userhost, decrypt($passwdhost));
+        error_log("pppactive AJAX connect main: ip=$iphost session=$session result=$conn_result");
 	}
 
 	// load session MikroTik
@@ -49,10 +53,10 @@ if (!isset($_SESSION["mikhmon"])) {
     if (!is_array($getactive)) $getactive = [];
 	$TotalReg = count($getactive);
  
-	$countactive = $API->comm("/ppp/active/print", array(
-		"count-only" => "",
-	));
-	$cek=json_encode($countactive);
+
+
+	$countactive = $TotalReg;
+	$cek=json_encode($getactive);
 	if (strpos($cek,"ArrayA")) {
         echo "<script>window.location='./?info=Tidak Dapat Terhubung Ke Router.&session=" . $session . "'</script>";
 	}
@@ -100,9 +104,12 @@ if (!isset($_SESSION["mikhmon"])) {
 							<td style='text-align:center;'><i class='fa fa-minus-square text-danger pointer' onclick="if(confirm('Are you sure to remove ppp active ( <?= $getactive[$i]['name']; ?> )?')){loadpage('./?remove-pactive=<?= $getactive[$i]['.id']; ?>&disabled-name=<?= $getactive[$i]['name']; ?>&session=<?= $session; ?>')}else{}" title='Remove <?= $getactive[$i]['name']; ?>'></i>
 						<?php
 							$iduser=$API->comm("/ppp/secret/print",['?name'=>$getactive[$i]['name'],]);
-							echo "&nbsp&nbsp&nbsp <a title='Grafik User' href='./?ppp=grafik&idsecret=".$getactive[$i]['service']."-".$getactive[$i]['name']."&session=".$session."'><i class='fa fa-area-chart' aria-hidden='true'></i></b>";
-							echo "&nbsp&nbsp&nbsp <a title='Billing User' href='./?ppp=billing&idsecret=".$iduser[0]['.id']."&session=".$session."'><i class='fa fa-money' aria-hidden='true'></i></b>";
-							echo "&nbsp&nbsp&nbsp <a title='History User' href='./?ppp=history&idhistory=".$iduser[0]['.id']."&session=".$session."'><i class='fa fa-list-ol' aria-hidden='true'></i></b>";
+							$sec_id = isset($iduser[0]['.id']) ? $iduser[0]['.id'] : '';
+							$sec_comment = isset($iduser[0]['comment']) ? $iduser[0]['comment'] : caridtpelanggan($getactive[$i]['name'],9);
+
+							echo "&nbsp&nbsp&nbsp <a title='Grafik User' href='./?ppp=grafik&idsecret=".$getactive[$i]['service']."-".$getactive[$i]['name']."&session=".$session."'><i class='fa fa-area-chart' aria-hidden='true'></i></a>";
+							echo "&nbsp&nbsp&nbsp <a title='Billing User' href='./?ppp=billing&idsecret=".$sec_id."&session=".$session."'><i class='fa fa-money' aria-hidden='true'></i></a>";
+							echo "&nbsp&nbsp&nbsp <a title='History User' href='./?ppp=history&idhistory=".$sec_id."&session=".$session."'><i class='fa fa-list-ol' aria-hidden='true'></i></a>";
 							echo "</td>";
 							echo "<td>" . $getactive[$i]['name'] . "</td>";
 							echo "<td>" . $getactive[$i]['service'] . "</td>";
@@ -110,7 +117,7 @@ if (!isset($_SESSION["mikhmon"])) {
 							echo "<td>" . $getactive[$i]['encoding'] . "</td>";
 							echo "<td>" . $getactive[$i]['address'] . "</td>";
 							echo "<td>" . $getactive[$i]['uptime'] . "</td>";
-							echo "<td>" . (isset($iduser[0]['comment']) ? $iduser[0]['comment'] : caridtpelanggan($getactive[$i]['name'],9)) . "</td>";
+							echo "<td>" . $sec_comment . "</td>";
 							echo "</tr>";
 						}
 						?>

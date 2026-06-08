@@ -25,13 +25,8 @@ if (!isset($_SESSION["mikhmon"])) {
 	// get ppp profile
 	$getprofile = $API->comm("/ppp/profile/print");
 	$TotalReg = count($getprofile);
-	// count ppp profile
-	$countprofile = $API->comm("/ppp/profile/print", array(
-		"count-only" => "",
-	));
-	// get name
-	$getname = $API->comm("/ppp/profile/print");
-	$Totalname = count($getname);
+	// count ppp profile (no need for extra API call)
+	$countprofile = $TotalReg;
 }
 
 ?>
