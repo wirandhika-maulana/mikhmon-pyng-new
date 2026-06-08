@@ -134,7 +134,7 @@ date_default_timezone_set($_SESSION['timezone']);
 		$getlock = explode(",", $ponlogin)[6];
 		$_SESSION['ubp'] = $profile;
 		$commt = $user . "-" . rand(100, 999) . "-" . date("m.d.y") . "-" . $adcomment;
-		$gentemp = $commt . "|~" . $profile . "~" . $getvalid . "~" . $getprice . "!".$getsprice."~" . $timelimit . "~" . $datalimit . "~" . $getlock;
+		$gentemp = $commt . "|~" . $profile . "~" . $getvalid . "~" . $getprice . "!".$getsprice."~" . $timelimit . "~" . $datalimit . "~" . $getlock . "~" . $qty . "~" . $prefix;
 		$gen = '<?php $genu="'.encrypt($gentemp).'";?>';
 		$temp = './voucher/temp.php';
 		$handle = fopen($temp, 'w') or die('Cannot open file:  ' . $temp);
@@ -308,6 +308,8 @@ date_default_timezone_set($_SESSION['timezone']);
 		$udlimit = formatBytes($udlimit, 2);
 	}
 	$ulock = $genuser1[6];
+	$uqty = isset($genuser1[7]) && $genuser1[7] != "" ? $genuser1[7] : "-";
+	$uprefix = isset($genuser1[8]) && $genuser1[8] != "" ? $genuser1[8] : "-";
 	//$urlprint = "$umode-$ucode-$udate-$ucommt";
 	$urlprint = explode("|", decrypt($genu))[0];
 	if ($currency == in_array($currency, $cekindo['indo'])) {
@@ -577,6 +579,52 @@ date_default_timezone_set($_SESSION['timezone']);
 }
 .quick-qty-del:hover {
     background: #fee2e2;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .gen-form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .gen-label {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    .gen-input-wrap {
+        width: 100%;
+    }
+    .action-bar {
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap: 8px;
+    }
+    .action-bar .modern-btn {
+        flex: 1 1 calc(50% - 8px);
+        justify-content: center;
+        width: auto !important;
+        margin-bottom: 0 !important;
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+    .action-bar .modern-btn:first-child {
+        flex: 1 1 100%;
+    }
+    .gen-body .col-6 {
+        width: 100% !important;
+        float: none !important;
+        padding: 0 !important;
+        margin-bottom: 15px;
+    }
+    .qty-input-modern {
+        flex: 1 1 100%;
+    }
+    .profile-btn {
+        flex: 1 1 calc(50% - 10px);
+        justify-content: center;
+        width: auto !important;
+        padding: 8px 10px;
+    }
 }
 
 </style>
@@ -849,7 +897,6 @@ date_default_timezone_set($_SESSION['timezone']);
         }
         ?>
       </div>
-      </div>
     </div>
   </div>
   
@@ -1013,13 +1060,23 @@ date_default_timezone_set($_SESSION['timezone']);
                 <td><?= $_lock_user ?></td><td><b><?= $ulock ?></b></td>
             </tr>
             <tr>
-                <td colspan="2" style="background: #f8fafc; text-align: center; border-radius: 12px;">
-                    <p style="padding: 4px 5px; margin: 0; font-size: 13px; color: #475569;">
-                    <?= $_format_time_limit ?>
-                    </p>
-                    <p style="padding: 4px 5px; margin: 0; font-size: 13px; color: #475569;">
-                    <?= $_details_add_user ?>
-                    </p>
+                <td>Total Voucher</td><td><b style="color: #3b82f6;"><?= $uqty ?> pcs</b></td>
+            </tr>
+            <tr>
+                <td>Reseller Prefix</td><td><b style="color: #10b981;"><?= $uprefix ?></b></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding: 16px 0 0 0;">
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px; text-align: left; box-shadow: 0 2px 4px rgba(56, 189, 248, 0.1);">
+                        <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 500; color: #0369a1; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa fa-info-circle" style="font-size: 16px; margin-top: 2px; color: #0ea5e9;"></i> 
+                            <span><?= $_format_time_limit ?></span>
+                        </p>
+                        <p style="margin: 0; font-size: 13px; font-weight: 500; color: #0369a1; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa fa-lightbulb-o" style="font-size: 16px; margin-top: 1px; color: #0ea5e9;"></i>
+                            <span><?= $_details_add_user ?></span>
+                        </p>
+                    </div>
                 </td>
             </tr>
             </table>
@@ -1043,14 +1100,14 @@ function GetVP(){
 function setQty(value) {
   var input = document.getElementById('qtyinput');
   input.value = value;
-  // Pulse animation feedback
-  input.style.borderColor = '#764ba2';
-  input.style.boxShadow = '0 0 0 3px rgba(118,75,162,0.35), 0 4px 12px rgba(0,0,0,0.3)';
-  input.style.transform = 'scale(1.08)';
+  // Pulse animation feedback without scaling to prevent overlapping
+  input.style.borderColor = '#3b82f6';
+  input.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+  input.style.backgroundColor = '#f0f9ff';
   setTimeout(function() {
-    input.style.borderColor = '#667eea88';
-    input.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
-    input.style.transform = 'scale(1)';
+    input.style.borderColor = '#e2e8f0';
+    input.style.boxShadow = 'none';
+    input.style.backgroundColor = '#f8fafc';
   }, 300);
 }
 
@@ -1059,28 +1116,25 @@ function setProfile(profileName) {
   var profSelect = document.getElementById('profselect');
   profSelect.value = profileName;
   
-  // Update button styling using data attributes
-  var profileButtons = document.querySelectorAll('.prof-btn');
+  // Update button styling using standard classes
+  var profileButtons = document.querySelectorAll('.profile-btn');
   for (var i = 0; i < profileButtons.length; i++) {
     var btn = profileButtons[i];
     var btnProfile = btn.getAttribute('data-profile');
-    var gradFrom = btn.getAttribute('data-grad-from');
-    var gradTo = btn.getAttribute('data-grad-to');
+    var icon = btn.querySelector('i.fa');
     
     if (btnProfile === profileName) {
       btn.classList.add('prof-active');
-      btn.style.background = 'linear-gradient(135deg, ' + gradFrom + ', ' + gradTo + ')';
-      btn.style.color = 'white';
-      btn.style.border = '2px solid transparent';
-      btn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3), 0 0 0 3px ' + gradFrom + '88';
-      btn.style.transform = 'scale(1.05)';
+      if(icon) {
+          icon.classList.remove('fa-tag');
+          icon.classList.add('fa-check-circle');
+      }
     } else {
       btn.classList.remove('prof-active');
-      btn.style.background = 'linear-gradient(135deg, ' + gradFrom + '33, ' + gradTo + '33)';
-      btn.style.color = '#e4e7ea';
-      btn.style.border = '2px solid ' + gradFrom + '55';
-      btn.style.boxShadow = 'none';
-      btn.style.transform = 'none';
+      if(icon) {
+          icon.classList.remove('fa-check-circle');
+          icon.classList.add('fa-tag');
+      }
     }
   }
   
