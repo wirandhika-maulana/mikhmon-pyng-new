@@ -237,9 +237,13 @@ if (!isset($_SESSION["mikhmon"])) {
               <div class="box-group-area">
                 <span >
                     <?php
-                    echo $_cpu_load." : " . $resource['cpu-load'] . "%<br/>
-                    ".$_free_memory." : " . formatBytes($resource['free-memory'], 2) . "<br/>
-                    ".$_free_hdd." : " . formatBytes($resource['free-hdd-space'], 2)
+                    $disp_cpu_load = ($ppp_connected && isset($resource_ppp['cpu-load'])) ? $resource_ppp['cpu-load'] : $resource['cpu-load'];
+                    $disp_free_memory = ($ppp_connected && isset($resource_ppp['free-memory'])) ? $resource_ppp['free-memory'] : $resource['free-memory'];
+                    $disp_free_hdd = ($ppp_connected && isset($resource_ppp['free-hdd-space'])) ? $resource_ppp['free-hdd-space'] : $resource['free-hdd-space'];
+
+                    echo $_cpu_load." : " . $disp_cpu_load . "%<br/>
+                    ".$_free_memory." : " . formatBytes($disp_free_memory, 2) . "<br/>
+                    ".$_free_hdd." : " . formatBytes($disp_free_hdd, 2)
                     ?>
                 </span>
                 </div>

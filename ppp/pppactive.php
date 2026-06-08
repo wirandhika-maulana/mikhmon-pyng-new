@@ -16,32 +16,32 @@ if (!isset($_SESSION["mikhmon"])) {
     }
 
     // Include RouterOS API class for AJAX reload
-    include_once(__DIR__ . '/../lib/routeros_api.class.php');
-	$API = new RouterosAPI();
-	$API->debug = false;
+    if (!isset($API) || !is_object($API)) {
+        include_once(__DIR__ . '/../lib/routeros_api.class.php');
+        $API = new RouterosAPI();
+        $API->debug = false;
 
-	    // Load Dual Router Config (Secondary PPPoE Router)
-    $dual_router_ip = "";
-    $dual_router_user = "";
-    $dual_router_pass = "";
-    $dual_file = __DIR__ . "/../include/dual_router_config.php";
-    if (file_exists($dual_file)) {
-        include_once($dual_file);
-		if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
-			$dual_router_ip = $dual_router[$session]['ip'];
-			$dual_router_user = $dual_router[$session]['user'];
-			$dual_router_pass = decrypt($dual_router[$session]['pass']);
-		}
-	}
+        // Load Dual Router Config (Secondary PPPoE Router)
+        $dual_router_ip = "";
+        $dual_router_user = "";
+        $dual_router_pass = "";
+        $dual_file = __DIR__ . "/../include/dual_router_config.php";
+        if (file_exists($dual_file)) {
+            include_once($dual_file);
+            if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+                $dual_router_ip = $dual_router[$session]['ip'];
+                $dual_router_user = $dual_router[$session]['user'];
+                $dual_router_pass = decrypt($dual_router[$session]['pass']);
+            }
+        }
 
-	// Connect to dual router if available, otherwise main router
-	if (!empty($dual_router_ip)) {
-		$conn_result = $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
-        error_log("pppactive AJAX connect dual: ip=$dual_router_ip session=$session result=$conn_result");
-	} else {
-		$conn_result = $API->connect($iphost, $userhost, decrypt($passwdhost));
-        error_log("pppactive AJAX connect main: ip=$iphost session=$session result=$conn_result");
-	}
+        // Connect to dual router if available, otherwise main router
+        if (!empty($dual_router_ip)) {
+            $conn_result = $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+        } else {
+            $conn_result = $API->connect($iphost, $userhost, decrypt($passwdhost));
+        }
+    }
 
 	// load session MikroTik
 	$session = $_GET['session'];
@@ -53,7 +53,14 @@ if (!isset($_SESSION["mikhmon"])) {
     if (!is_array($getactive)) $getactive = [];
 	$TotalReg = count($getactive);
  
-
+    // Fetch all secrets ONCE to avoid making API calls inside the loop
+    $allsecrets = $API->comm("/ppp/secret/print");
+    $secrets_by_name = [];
+    if (is_array($allsecrets)) {
+        foreach ($allsecrets as $s) {
+            $secrets_by_name[$s['name']] = $s;
+        }
+    }
 
 	$countactive = $TotalReg;
 	$cek=json_encode($getactive);
@@ -103,9 +110,9 @@ if (!isset($_SESSION["mikhmon"])) {
 						?>
 							<td style='text-align:center;'><i class='fa fa-minus-square text-danger pointer' onclick="if(confirm('Are you sure to remove ppp active ( <?= $getactive[$i]['name']; ?> )?')){loadpage('./?remove-pactive=<?= $getactive[$i]['.id']; ?>&disabled-name=<?= $getactive[$i]['name']; ?>&session=<?= $session; ?>')}else{}" title='Remove <?= $getactive[$i]['name']; ?>'></i>
 						<?php
-							$iduser=$API->comm("/ppp/secret/print",['?name'=>$getactive[$i]['name'],]);
-							$sec_id = isset($iduser[0]['.id']) ? $iduser[0]['.id'] : '';
-							$sec_comment = isset($iduser[0]['comment']) ? $iduser[0]['comment'] : caridtpelanggan($getactive[$i]['name'],9);
+							$matched_secret = isset($secrets_by_name[$getactive[$i]['name']]) ? $secrets_by_name[$getactive[$i]['name']] : null;
+							$sec_id = isset($matched_secret['.id']) ? $matched_secret['.id'] : '';
+							$sec_comment = isset($matched_secret['comment']) ? $matched_secret['comment'] : caridtpelanggan($getactive[$i]['name'],9);
 
 							echo "&nbsp&nbsp&nbsp <a title='Grafik User' href='./?ppp=grafik&idsecret=".$getactive[$i]['service']."-".$getactive[$i]['name']."&session=".$session."'><i class='fa fa-area-chart' aria-hidden='true'></i></a>";
 							echo "&nbsp&nbsp&nbsp <a title='Billing User' href='./?ppp=billing&idsecret=".$sec_id."&session=".$session."'><i class='fa fa-money' aria-hidden='true'></i></a>";

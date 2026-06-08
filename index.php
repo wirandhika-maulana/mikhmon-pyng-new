@@ -690,21 +690,10 @@ if ($hotspot == "dashboard" || substr(end(explode("/", $url)), 0, 8) == "?sessio
 	</script>
 	';
 } elseif ($ppp == "active" ) {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadPppoeActive").load("./PPP/pppactive.php?session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed to prevent router log flooding
 } elseif ($ppp == "nonactive" ) {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadPppoeNonActive").load("./PPP/pppnonactive.php?session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed to prevent router log flooding
+
 } elseif ($minterface == "netwatch" ) {
   echo '<script>
   $(document).ready(function(){

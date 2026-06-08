@@ -16,29 +16,31 @@ if (!isset($_SESSION["mikhmon"])) {
     }
 
     // Include RouterOS API class for AJAX reload
-    include_once(__DIR__ . '/../lib/routeros_api.class.php');
-    $API = new RouterosAPI();
-    $API->debug = false;
+    if (!isset($API) || !is_object($API)) {
+        include_once(__DIR__ . '/../lib/routeros_api.class.php');
+        $API = new RouterosAPI();
+        $API->debug = false;
 
-    // Load Dual Router Config (Secondary PPPoE Router)
-    $dual_router_ip = "";
-    $dual_router_user = "";
-    $dual_router_pass = "";
-    $dual_file = __DIR__ . "/../include/dual_router_config.php";
-    if (file_exists($dual_file)) {
-        include_once($dual_file);
-        if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
-            $dual_router_ip = $dual_router[$session]['ip'];
-            $dual_router_user = $dual_router[$session]['user'];
-            $dual_router_pass = decrypt($dual_router[$session]['pass']);
+        // Load Dual Router Config (Secondary PPPoE Router)
+        $dual_router_ip = "";
+        $dual_router_user = "";
+        $dual_router_pass = "";
+        $dual_file = __DIR__ . "/../include/dual_router_config.php";
+        if (file_exists($dual_file)) {
+            include_once($dual_file);
+            if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+                $dual_router_ip = $dual_router[$session]['ip'];
+                $dual_router_user = $dual_router[$session]['user'];
+                $dual_router_pass = decrypt($dual_router[$session]['pass']);
+            }
         }
-    }
 
-    // Connect to dual router if available, otherwise main router
-    if (!empty($dual_router_ip)) {
-        $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
-    } else {
-        $API->connect($iphost, $userhost, decrypt($passwdhost));
+        // Connect to dual router if available, otherwise main router
+        if (!empty($dual_router_ip)) {
+            $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+        } else {
+            $API->connect($iphost, $userhost, decrypt($passwdhost));
+        }
     }
 
     // load session MikroTik
