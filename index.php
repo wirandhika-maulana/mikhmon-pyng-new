@@ -171,6 +171,7 @@ if (!isset($_SESSION["mikhmon"])) {
   $bbilling	= $_GET['bbilling'];
   $tripay= $_GET['tri-pay'];
   $info=$_GET['info'];
+  $wagateway=isset($_GET['wagateway']) ? $_GET['wagateway'] : '';
 
   $pagehotspot = array('users','hosts','ipbinding','cookies','log','dhcp-leases');
   $pageppp = array('secrets','profiles','active','addsecret','billing','history');
@@ -441,7 +442,12 @@ elseif ($removeexpiredhotspotuser != "") {
 
 // template editor
   elseif ($hotspot == "template-editor") {
-    include_once('./settings/vouchereditor.php');
+    include_once('./settings/template-editor.php');
+  }
+
+// whatsapp gateway
+  elseif (isset($_GET['wagateway']) && $_GET['wagateway'] == "settings") {
+    include_once('./wagateway/wagateway.php');
   }
 
 // upload logo

@@ -241,6 +241,10 @@ if (!isset($_SESSION["mikhmon"])) {
 		$sweb = "menu-open";
 		$mpage = "Report Web Hook";
 
+	} elseif ($id == "wagateway" || $wagateway == "settings") {
+		$swagateway = "active";
+		$mpage = "WA Gateway";
+
 	} elseif ($id == "skouta") {
 		$skt = "active";
 		$mpage = "Setting Qouta";
@@ -502,6 +506,9 @@ include('./info.php');
   <a href="./?hotspot=uplogo&session=<?= $session; ?>" class="menu <?= $uplogo; ?>"> <i class="fa fa-upload "></i> <?= $_upload_logo ?> </a>
   <a href="./?hotspot=template-editor&template=default&session=<?= $session; ?>" class="menu <?= $teditor; ?>"> <i class="fa fa-edit "></i> <?= $_template_editor ?> </a>          
   </div>
+
+  <!--wa gateway-->
+  <a href="./?wagateway=settings&session=<?= $session; ?>" class="menu <?= $swagateway; ?>"> <i class="fa fa-whatsapp "></i> WA Gateway </a>
 
   <!--setwebhook-$swebhook-->
   <!-- <div class="dropdown-btn <?= $sweb; ?>"><i class="fa fa-linux "></i> Settings Bot

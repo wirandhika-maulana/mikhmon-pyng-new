@@ -6,21 +6,43 @@ if (!isset($_SESSION["mikhmon"])) {
 } else {
     $session = $_GET['session'];
 
-    include('../include/config.php');
-    include('../include/readcfg.php');
+    include_once(__DIR__ . '/../include/config.php');
+    include_once(__DIR__ . '/../include/readcfg.php');
     
     // lang
-    include('../include/lang.php');
-    include('../lang/'.$langid.'.php');
+    include_once(__DIR__ . '/../include/lang.php');
+    if (file_exists(__DIR__ . '/../lang/'.$langid.'.php')) {
+        include_once(__DIR__ . '/../lang/'.$langid.'.php');
+    }
 
     $API = new RouterosAPI();
     $API->debug = false;
-    $API->connect($iphost, $userhost, decrypt($passwdhost));
+
+    // Load Dual Router Config (Secondary PPPoE Router)
+    $dual_router_ip = "";
+    $dual_router_user = "";
+    $dual_router_pass = "";
+    $dual_file = __DIR__ . "/../include/dual_router_config.php";
+    if (file_exists($dual_file)) {
+        include_once($dual_file);
+        if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+            $dual_router_ip = $dual_router[$session]['ip'];
+            $dual_router_user = $dual_router[$session]['user'];
+            $dual_router_pass = decrypt($dual_router[$session]['pass']);
+        }
+    }
+
+    // Connect to dual router if available, otherwise main router
+    if (!empty($dual_router_ip)) {
+        $API->connect($dual_router_ip, $dual_router_user, $dual_router_pass);
+    } else {
+        $API->connect($iphost, $userhost, decrypt($passwdhost));
+    }
 
     // load session MikroTik
     $session = $_GET['session'];
 
-    include "ppp/function.php";
+    include_once __DIR__ . "/function.php";
 
     // Ambil semua PPP secrets
     $allsecrets = $API->comm("/ppp/secret/print");

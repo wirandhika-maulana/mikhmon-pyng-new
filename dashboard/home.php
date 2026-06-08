@@ -104,6 +104,11 @@ if (!isset($_SESSION["mikhmon"])) {
         if ($API_PPP->connect($dual_router_ip, $dual_router_user, $dual_router_pass)) {
             $API_FOR_PPP = $API_PPP;
             $ppp_connected = true;
+            // Get PPPoE router resource
+            $getresource_ppp = $API_FOR_PPP->comm("/system/resource/print");
+            $resource_ppp = $getresource_ppp[0];
+            $getrb_ppp = $API_FOR_PPP->comm("/system/routerboard/print");
+            $routerboard_ppp = $getrb_ppp[0];
         }
     }
 
@@ -124,7 +129,7 @@ if (!isset($_SESSION["mikhmon"])) {
     }
 
     // get & counting ppp secrets
-    $countsecrets = count($API_FOR_PPP->comm("/ppp/secret/print"));
+    $countsecrets = $API_FOR_PPP->comm("/ppp/secret/print", array("count-only" => ""));
     if ($countsecrets < 2) {
         $hunit = "item";
     } elseif ($countsecrets > 1) {
@@ -132,7 +137,7 @@ if (!isset($_SESSION["mikhmon"])) {
     }
 
     // get & counting ppp active
-    $countpppactive = count($API_FOR_PPP->comm("/ppp/active/print"));
+    $countpppactive = $API_FOR_PPP->comm("/ppp/active/print", array("count-only" => ""));
     if ($countpppactive < 2) {
         $hunit = "item";
     } elseif ($countpppactive > 1) {
@@ -214,9 +219,13 @@ if (!isset($_SESSION["mikhmon"])) {
               <div class="box-group-area">
                 <span >
                     <?php
-                    echo $_board_name." : " . $resource['board-name'] . "<br/>
-                    ".$_model." : " . $routerboard['model'] . "<br/>
-                    Router OS : " . $resource['version'];
+                    $disp_board_name = ($ppp_connected && isset($resource_ppp['board-name'])) ? $resource_ppp['board-name'] : $resource['board-name'];
+                    $disp_model = ($ppp_connected && isset($routerboard_ppp['model'])) ? $routerboard_ppp['model'] : $routerboard['model'];
+                    $disp_version = ($ppp_connected && isset($resource_ppp['version'])) ? $resource_ppp['version'] : $resource['version'];
+                    
+                    echo $_board_name." : " . $disp_board_name . "<br/>
+                    ".$_model." : " . $disp_model . "<br/>
+                    Router OS : " . $disp_version;
                     ?>
                 </span>
               </div>
@@ -274,14 +283,14 @@ if (!isset($_SESSION["mikhmon"])) {
                   </div>
                   <div class="col-3 col-box-6">
                     <div class="box bg-yellow bmh-75">
-                      <a onclick="cancelPage()" href="./?hotspot-user=add&session=<?= $session; ?>">
+                      <a onclick="cancelPage()" href="./?hotspot=reseller&session=<?= $session; ?>">
                         <div>
-                          <h1><i class="fa fa-user-plus"></i>
-                              <span style="font-size: 15px;"><?= $_add ?></span>
+                          <h1><i class="fa fa-building"></i>
+                              <span style="font-size: 15px;">Add Reseller</span>
                           </h1>
                         </div>
                         <div>
-                            <i class="fa fa-user-plus"></i> <?= $_hotspot_users ?>
+                            <i class="fa fa-building"></i> Reseller
                         </div>
                       </a>
                     </div>

@@ -45,6 +45,33 @@ include('../lang/'.$langid.'.php');
 
     $API->connect($iphost, $userhost, decrypt($passwdhost));
 
+    // Load Dual Router Config
+    $dual_router_ip = "";
+    $dual_router_user = "";
+    $dual_router_pass = "";
+    $dual_file = "../include/dual_router_config.php";
+    if (file_exists($dual_file)) {
+        include_once($dual_file);
+        if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+            $dual_router_ip = $dual_router[$session]['ip'];
+            $dual_router_user = $dual_router[$session]['user'];
+            $dual_router_pass = decrypt($dual_router[$session]['pass']);
+        }
+    }
+
+    $ppp_connected = false;
+    if (!empty($dual_router_ip)) {
+        $API_PPP = new RouterosAPI();
+        $API_PPP->debug = false;
+        if ($API_PPP->connect($dual_router_ip, $dual_router_user, $dual_router_pass)) {
+            $ppp_connected = true;
+            $getresource_ppp = $API_PPP->comm("/system/resource/print");
+            $resource_ppp = $getresource_ppp[0];
+            $getrb_ppp = $API_PPP->comm("/system/routerboard/print");
+            $routerboard_ppp = $getrb_ppp[0];
+        }
+    }
+
 // get MikroTik system clock
     $getclock = $API->comm("/system/clock/print");
     $clock = $getclock[0];
@@ -83,9 +110,13 @@ include('../lang/'.$langid.'.php');
               <div class="box-group-area">
                 <span >
                     <?php
-                    echo $_board_name." : " . $resource['board-name'] . "<br/>
-                    ".$_model." : " . $routerboard['model'] . "<br/>
-                    Router OS : " . $resource['version'];
+                    $disp_board_name = ($ppp_connected && isset($resource_ppp['board-name'])) ? $resource_ppp['board-name'] : $resource['board-name'];
+                    $disp_model = ($ppp_connected && isset($routerboard_ppp['model'])) ? $routerboard_ppp['model'] : $routerboard['model'];
+                    $disp_version = ($ppp_connected && isset($resource_ppp['version'])) ? $resource_ppp['version'] : $resource['version'];
+                    
+                    echo $_board_name." : " . $disp_board_name . "<br/>
+                    ".$_model." : " . $disp_model . "<br/>
+                    Router OS : " . $disp_version;
                     ?>
                 </span>
               </div>
@@ -162,14 +193,14 @@ include('../lang/'.$langid.'.php');
                   </div>
                   <div class="col-3 col-box-6">
                     <div class="box bg-yellow bmh-75">
-                      <a href="./?hotspot-user=add&session=<?= $session; ?>">
+                      <a href="./?hotspot=reseller&session=<?= $session; ?>">
                         <div>
-                          <h1><i class="fa fa-user-plus"></i>
-                              <span style="font-size: 15px;"><?= $_add ?></span>
+                          <h1><i class="fa fa-building"></i>
+                              <span style="font-size: 15px;">Add Reseller</span>
                           </h1>
                         </div>
                         <div>
-                            <i class="fa fa-user-plus"></i> <?= $_hotspot_users ?>
+                            <i class="fa fa-building"></i> Reseller
                         </div>
                       </a>
                     </div>
