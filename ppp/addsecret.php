@@ -65,7 +65,6 @@ if (!isset($_SESSION["mikhmon"])) {
     if (isset($_GET['idprof'])) {
         $selectedProfile = $_GET['nprof'];
         
-        // Deteksi kata kunci pada nama profile
         $profUpper = strtoupper($selectedProfile);
         if (strpos($profUpper, 'BRONZE') !== false) {
             $prefix = "1010";
@@ -86,7 +85,6 @@ if (!isset($_SESSION["mikhmon"])) {
             $maxId = 0;
             foreach ($dtsecret as $sec) {
                 $sname = $sec['name'];
-                // Cari secret yang 8 karakter dan diawali prefix VLAN
                 if (strlen($sname) == 8 && strpos($sname, $prefix) === 0) {
                     $idNum = (int)substr($sname, 4, 4);
                     if ($idNum > $maxId) {
@@ -96,7 +94,7 @@ if (!isset($_SESSION["mikhmon"])) {
             }
             
             if ($maxId == 0) {
-                $autoUsername = $prefix . "1001"; // Default pertama jika kosong
+                $autoUsername = $prefix . "1001";
             } else {
                 $nextId = $maxId + 1;
                 $autoUsername = $prefix . str_pad($nextId, 4, "0", STR_PAD_LEFT);
@@ -108,7 +106,6 @@ if (!isset($_SESSION["mikhmon"])) {
     }
 }
 ?>
-
 <style>
 /* ============================================
    MODERN ADD SECRET - PREMIUM DESIGN
@@ -118,7 +115,7 @@ if (!isset($_SESSION["mikhmon"])) {
 
 .secret-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    max-width: 900px;
+    width: 100%;
     margin: 0 auto;
 }
 

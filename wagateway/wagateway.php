@@ -54,7 +54,7 @@ $webhookUrl = $protocol . $domainName . dirname($_SERVER['PHP_SELF']) . '/wagate
 
 .wa-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
@@ -333,7 +333,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 <div class="wa-container">
     <div class="row">
         <!-- Main Settings Column -->
-        <div class="col-12 col-md-7">
+        <div class="col-12 col-md-8">
             <div class="wa-card">
                 <div class="wa-header">
                     <div class="wa-header-icon">
@@ -401,7 +401,7 @@ input:checked + .slider:before { transform: translateX(26px); }
         </div>
         
         <!-- Sidebar Column -->
-        <div class="col-12 col-md-5">
+        <div class="col-12 col-md-4">
             <!-- Webhook Card -->
             <div class="wa-card">
                 <div class="wa-header" style="background: linear-gradient(135deg, #6366f1, #4f46e5); padding: 20px;">
