@@ -112,19 +112,17 @@ if (!isset($_SESSION["mikhmon"])) {
         }
     }
 
-    // get & counting ppp profiles
-    $dtprofile = $API_FOR_PPP->comm("/ppp/profile/print");
-    $countprofiles = count($dtprofile);
-    $defa=0;
-    for ($x=0;$x<$countprofiles;$x++) {
-        if ($dtprofile[$x]['default']=="true") {
-            $defa++;
-        }
+    // get & counting ppp profiles optimized
+    $countprofiles = $API_FOR_PPP->comm("/ppp/profile/print", array(
+        "?default" => "false",
+        "count-only" => ""
+    ));
+    if (!is_numeric($countprofiles)) {
+        $countprofiles = 0;
     }
-    $countprofiles=$countprofiles-$defa;
     if ($countprofiles < 2) {
         $uunit = "item";
-    } elseif ($countprofiles > 1) {
+    } else {
         $uunit = "items";
     }
 

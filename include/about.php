@@ -197,6 +197,16 @@ if (!isset($_SESSION["mikhmon"])) {
       <div class="modern-about-content">
         
         <div class="modern-changelog-item">
+          <div class="modern-changelog-date">Version 3.1 (Responsive Update) - June 2026</div>
+          <ul>
+            <li><strong>Added</strong>: Tata letak responsif penuh (Mobile Friendly) pada halaman Generate User dan Quick Print.</li>
+            <li><strong>Added</strong>: Integrasi Quick Print UI modern ke menu utama Quick Print.</li>
+            <li><strong>Fixed</strong>: Tampilan Action Bar dan Quick Profile yang bertumpuk pada layar HP/Tablet.</li>
+            <li><strong>Improved</strong>: Konsistensi ukuran *Header* & *Icon* pada menu PPP Secret, WA Gateway, Webhook, dan Test Connection.</li>
+          </ul>
+        </div>
+        
+        <div class="modern-changelog-item">
           <div class="modern-changelog-date">Version 3.0 (Modern Redesign) - June 2026</div>
           <ul>
             <li><strong>Added</strong>: Full Modern Glassmorphism UI integration globally.</li>

@@ -98,14 +98,14 @@ $webhookUrl = $protocol . $domainName . dirname($_SERVER['PHP_SELF']) . '/wagate
 }
 
 .wa-header-icon {
-    width: 54px;
-    height: 54px;
+    width: 40px;
+    height: 40px;
     background: rgba(255,255,255,0.2);
-    border-radius: 16px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 20px;
     color: #fff;
     backdrop-filter: blur(10px);
     z-index: 1;
@@ -117,7 +117,7 @@ $webhookUrl = $protocol . $domainName . dirname($_SERVER['PHP_SELF']) . '/wagate
 
 .wa-header-text h3 {
     margin: 0;
-    font-size: 22px;
+    font-size: 17px;
     font-weight: 700;
     color: #fff;
     letter-spacing: -0.3px;
@@ -404,11 +404,11 @@ input:checked + .slider:before { transform: translateX(26px); }
             <!-- Webhook Card -->
             <div class="wa-card">
                 <div class="wa-header" style="background: linear-gradient(135deg, #6366f1, #4f46e5); padding: 20px;">
-                    <div class="wa-header-icon" style="width: 44px; height: 44px; font-size: 20px;">
+                    <div class="wa-header-icon" style="width: 40px; height: 40px; font-size: 20px;">
                         <i class="fa fa-link"></i>
                     </div>
                     <div class="wa-header-text">
-                        <h3 style="font-size: 18px;">Webhook Router</h3>
+                        <h3 style="font-size: 17px;">Webhook Router</h3>
                     </div>
                 </div>
                 <div class="wa-body" style="padding: 24px;">
@@ -429,11 +429,11 @@ input:checked + .slider:before { transform: translateX(26px); }
             <!-- Test Connection Card -->
             <div class="wa-card">
                 <div class="wa-header" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 20px;">
-                    <div class="wa-header-icon" style="width: 44px; height: 44px; font-size: 20px;">
+                    <div class="wa-header-icon" style="width: 40px; height: 40px; font-size: 20px;">
                         <i class="fa fa-paper-plane"></i>
                     </div>
                     <div class="wa-header-text">
-                        <h3 style="font-size: 18px;">Test Connection</h3>
+                        <h3 style="font-size: 17px;">Test Connection</h3>
                     </div>
                 </div>
                 <div class="wa-body" style="padding: 24px;">
