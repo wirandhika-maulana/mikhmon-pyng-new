@@ -56,7 +56,6 @@ $webhookUrl = $protocol . $domainName . dirname($_SERVER['PHP_SELF']) . '/wagate
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     width: 100%;
     margin: 0 auto;
-    padding: 20px;
 }
 
 /* Glassmorphism Card */
