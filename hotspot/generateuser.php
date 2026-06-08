@@ -321,17 +321,281 @@ date_default_timezone_set($_SESSION['timezone']);
 
 }
 ?>
+<style>
+/* ============================================
+   MODERN GENERATE USER - PREMIUM DESIGN
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.gen-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    width: 100%;
+}
+
+/* Glassmorphism Card */
+.gen-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.9));
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.08),
+        0 2px 8px rgba(0,0,0,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    overflow: hidden;
+    animation: cardSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 24px;
+}
+
+@keyframes cardSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.gen-header {
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.gen-header.purple { background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); }
+.gen-header.blue { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); }
+.gen-header.primary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.gen-header.success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+
+.gen-header::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNykiLz48L3N2Zz4=');
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+}
+
+.gen-header-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    backdrop-filter: blur(10px);
+    z-index: 1;
+}
+
+.gen-header-text {
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    cursor: pointer;
+}
+
+.gen-header-text h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gen-body {
+    padding: 24px 30px;
+}
+
+/* Form Styles */
+.gen-form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 16px;
+}
+.gen-form-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.gen-label {
+    width: 25%;
+    font-weight: 600;
+    color: #475569;
+    font-size: 14px;
+}
+.gen-input-wrap {
+    width: 75%;
+}
+
+.gen-form-control {
+    width: 100%;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.gen-form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.modern-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: white;
+}
+.modern-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.btn-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+.btn-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.btn-secondary { background: linear-gradient(135deg, #64748b, #475569); }
+.btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.btn-info { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+.btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+/* Modern Profile & Qty Buttons */
+.profile-btn {
+    padding: 10px 16px;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.profile-btn:hover {
+    border-color: #3b82f6;
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+.profile-btn.prof-active {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.qty-input-modern {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.qty-input-modern:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.quick-qty-item-modern {
+    display: inline-flex;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+.quick-qty-item-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.quick-qty-btn {
+    background: #fff;
+    color: #475569;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.quick-qty-btn:hover {
+    background: #f8fafc;
+    color: #3b82f6;
+}
+.quick-qty-del {
+    background: #f8fafc;
+    color: #ef4444;
+    border: none;
+    border-left: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.quick-qty-del:hover {
+    background: #fee2e2;
+}
+
+</style>
+
+<div class="gen-container">
 <!-- Quick Generate Panel -->
 <div class="row" style="margin-bottom: 15px;">
 <div class="col-12">
-<div class="card" style="border: 2px solid #6f42c1; border-radius: 10px; overflow: hidden;">
-	<div class="card-header" style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; padding: 12px 20px; cursor: pointer;" onclick="toggleQuickGen();">
-		<h3 style="margin: 0; display: flex; align-items: center; justify-content: space-between;">
-			<span><i class="fa fa-bolt"></i> Quick Generate</span>
-			<i class="fa fa-chevron-down" id="quickGenChevron" style="transition: transform 0.3s ease;"></i>
-		</h3>
+<div class="gen-card">
+	<div class="gen-header purple" onclick="toggleQuickGen();" style="cursor: pointer;">
+        <div class="gen-header-icon">
+            <i class="fa fa-bolt"></i>
+        </div>
+        <div class="gen-header-text">
+            <h3>Quick Generate</h3>
+			<i class="fa fa-chevron-down" id="quickGenChevron" style="transition: transform 0.3s ease; color: white; font-size: 18px;"></i>
+		</div>
 	</div>
-	<div class="card-body" id="quickGenBody" style="display: none; padding: 15px;">
+	<div class="gen-body" id="quickGenBody" style="display: none;">
 		<?php if (count($quickGenData) > 0) { ?>
 		<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
 			<?php foreach ($quickGenData as $preset) { 
@@ -470,14 +734,17 @@ date_default_timezone_set($_SESSION['timezone']);
 <!-- Quick Print Panel -->
 <div class="row" style="margin-bottom: 15px;">
 <div class="col-12">
-	<div class="card" style="border: 2px solid #17a2b8; border-radius: 10px; overflow: hidden;">
-		<div class="card-header" style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 12px 20px; cursor: pointer;" onclick="toggleQuickPrint();">
-			<h3 style="margin: 0; display: flex; align-items: center; justify-content: space-between;">
-				<span><i class="fa fa-print"></i> Quick Print</span>
-				<i class="fa fa-chevron-down" id="quickPrintChevron" style="transition: transform 0.3s ease;"></i>
-			</h3>
+	<div class="gen-card">
+		<div class="gen-header blue" onclick="toggleQuickPrint();" style="cursor: pointer;">
+            <div class="gen-header-icon">
+                <i class="fa fa-print"></i>
+            </div>
+            <div class="gen-header-text">
+                <h3>Quick Print</h3>
+				<i class="fa fa-chevron-down" id="quickPrintChevron" style="transition: transform 0.3s ease; color: white; font-size: 18px;"></i>
+			</div>
 		</div>
-		<div class="card-body" id="quickPrintBody" style="display: none; padding: 15px;">
+		<div class="gen-body" id="quickPrintBody" style="display: none;">
 			<div class="row">
 				<!-- Print Baru (Last Generate) -->
 				<div class="col-6">
@@ -522,47 +789,44 @@ date_default_timezone_set($_SESSION['timezone']);
 	</div>
 </div>
 </div>
+</div>
 
-<div class="row">
-<div class="col-8">
-<div class="card box-bordered">
-	<div class="card-header">
-	<h3><i class="fa fa-user-plus"></i> <?= $_generate_user ?> <small id="loader" style="display: none;" ><i><i class='fa fa-circle-o-notch fa-spin'></i> <?= $_processing ?> </i></small></h3> 
+<div class="row" style="margin-bottom: 24px;">
+<div class="col-12">
+<div class="gen-card">
+	<div class="gen-header primary">
+        <div class="gen-header-icon">
+            <i class="fa fa-user-plus"></i>
+        </div>
+        <div class="gen-header-text">
+            <h3><?= $_generate_user ?> <small id="loader" style="display: none; font-size: 14px; margin-left: 10px; font-weight: normal;"><i class='fa fa-circle-o-notch fa-spin'></i> <?= $_processing ?></small></h3> 
+        </div>
 	</div>
-	<div class="card-body">
+	<div class="gen-body">
 <form autocomplete="off" method="post" action="">
-	<div>
+	<div class="action-bar">
 		<?php if ($_SESSION['ubp'] != "") {
-		echo "    <a class='btn bg-warning' href='./?hotspot=users&profile=" . $_SESSION['ubp'] . "&session=" . $session . "'> <i class='fa fa-close'></i> ".$_close."</a>";
+		echo "    <a class='modern-btn btn-warning' style='background: linear-gradient(135deg, #f59e0b, #d97706);' href='./?hotspot=users&profile=" . $_SESSION['ubp'] . "&session=" . $session . "'> <i class='fa fa-close'></i> ".$_close."</a>";
 	} elseif ($_SESSION['vcr'] = "active") {
-		echo "    <a class='btn bg-warning' href='./?hotspot=users-by-profile&session=" . $session . "'> <i class='fa fa-close'></i> ".$_close."</a>";
+		echo "    <a class='modern-btn btn-warning' style='background: linear-gradient(135deg, #f59e0b, #d97706);' href='./?hotspot=users-by-profile&session=" . $session . "'> <i class='fa fa-close'></i> ".$_close."</a>";
 	} else {
-		echo "    <a class='btn bg-warning' href='./?hotspot=users&profile=all&session=" . $session . "'> <i class='fa fa-close'></i> ".$_close."</a>";
+		echo "    <a class='modern-btn btn-warning' style='background: linear-gradient(135deg, #f59e0b, #d97706);' href='./?hotspot=users&profile=all&session=" . $session . "'> <i class='fa fa-close'></i> ".$_close."</a>";
 	}
 
 	?>
-	<a class="btn bg-pink" title="Open User List by Profile 
-<?php if ($_SESSION['ubp'] == "") {
-	echo "all";
-} else {
-	echo $uprofile;
-} ?>" href="./?hotspot=users&profile=
-<?php if ($_SESSION['ubp'] == "") {
-	echo "all";
-} else {
-	echo $uprofile;
-} ?>&session=<?= $session; ?>"> <i class="fa fa-users"></i> <?= $_user_list ?></a>
-    <button type="submit" name="save" onclick="loader()" class="btn bg-primary" title="Generate User"> <i class="fa fa-save"></i> <?= $_generate ?></button>
-    <a class="btn bg-secondary" title="Print Default" href="./voucher/print.php?id=<?= $urlprint; ?>&qr=no&session=<?= $session; ?>" target="_blank"> <i class="fa fa-print"></i> <?= $_print ?></a>
-    <a class="btn bg-danger" title="Print QR" href="./voucher/print.php?id=<?= $urlprint; ?>&qr=yes&session=<?= $session; ?>" target="_blank"> <i class="fa fa-qrcode"></i> <?= $_print_qr ?></a>
-    <a class="btn bg-info" title="Print Small" href="./voucher/print.php?id=<?= $urlprint; ?>&small=yes&session=<?= $session; ?>" target="_blank"> <i class="fa fa-print"></i> <?= $_print_small ?></a>
+	<a class="modern-btn btn-pink" title="Open User List" href="./?hotspot=users&profile=<?php if ($_SESSION['ubp'] == "") { echo "all"; } else { echo $uprofile; } ?>&session=<?= $session; ?>"> <i class="fa fa-users"></i> <?= $_user_list ?></a>
+    <button type="submit" name="save" onclick="loader()" class="modern-btn btn-primary" title="Generate User"> <i class="fa fa-save"></i> <?= $_generate ?></button>
+    <a class="modern-btn btn-secondary" title="Print Default" href="./voucher/print.php?id=<?= $urlprint; ?>&qr=no&session=<?= $session; ?>" target="_blank"> <i class="fa fa-print"></i> <?= $_print ?></a>
+    <a class="modern-btn btn-danger" title="Print QR" href="./voucher/print.php?id=<?= $urlprint; ?>&qr=yes&session=<?= $session; ?>" target="_blank"> <i class="fa fa-qrcode"></i> <?= $_print_qr ?></a>
+    <a class="modern-btn btn-info" title="Print Small" href="./voucher/print.php?id=<?= $urlprint; ?>&small=yes&session=<?= $session; ?>" target="_blank"> <i class="fa fa-print"></i> <?= $_print_small ?></a>
 </div>
-<table class="table">
-  <tr>
-    <td class="align-middle"><?= $_profile ?></td>
-    <td>
+
+<div class="gen-form-container">
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_profile ?></div>
+    <div class="gen-input-wrap">
       <input type="hidden" id="profselect" name="profile" value="">
-      <div style="display: flex; gap: 10px; flex-wrap: wrap; padding: 4px 0;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0;">
         <?php 
         $TotalReg = count($getprofile);
         if ($genprof != "") {
@@ -571,84 +835,54 @@ date_default_timezone_set($_SESSION['timezone']);
           $defaultProfile = $getprofile[0]['name'];
         }
         
-        // Modern gradient color palette for profile buttons
-        $profileColors = array(
-          array('#667eea', '#764ba2'),
-          array('#f093fb', '#f5576c'),
-          array('#4facfe', '#00f2fe'),
-          array('#43e97b', '#38f9d7'),
-          array('#fa709a', '#fee140'),
-          array('#a18cd1', '#fbc2eb'),
-          array('#fccb90', '#d57eeb'),
-          array('#e0c3fc', '#8ec5fc'),
-          array('#f6d365', '#fda085'),
-          array('#96fbc4', '#f9f586'),
-        );
-        
         if ($TotalReg > 0) {
           for ($i = 0; $i < $TotalReg; $i++) {
             $profileName = $getprofile[$i]['name'];
             $isSelected = ($profileName == $defaultProfile);
-            $colorIdx = $i % count($profileColors);
-            $gradFrom = $profileColors[$colorIdx][0];
-            $gradTo = $profileColors[$colorIdx][1];
+            $activeClass = $isSelected ? 'prof-active' : '';
+            $iconClass = $isSelected ? 'fa-check-circle' : 'fa-tag';
             
-            if ($theme == 'dark') {
-              $bgAlpha = '33'; // ~20%
-              $textColor = '#e4e7ea';
-            } else {
-              $bgAlpha = '11'; // ~7%
-              $textColor = '#444444';
-            }
-
-            if ($isSelected) {
-              $btnStyle = "background: linear-gradient(135deg, {$gradFrom}, {$gradTo}); color: white; border: 2px solid transparent; box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 3px {$gradFrom}88; transform: scale(1.05);";
-            } else {
-              $btnStyle = "background: linear-gradient(135deg, {$gradFrom}{$bgAlpha}, {$gradTo}{$bgAlpha}); color: {$textColor}; border: 2px solid {$gradFrom}55;";
-            }
-            
-            echo "<button type='button' class='prof-btn' data-profile='" . htmlspecialchars($profileName) . "' data-grad-from='{$gradFrom}' data-grad-to='{$gradTo}' style='{$btnStyle} border-radius: 20px; padding: 8px 18px; font-weight: 600; font-size: 12.5px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); letter-spacing: 0.3px; position: relative; overflow: hidden;' onclick=\"setProfile('" . htmlspecialchars($profileName) . "'); GetVP();\" onmouseover=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}, {$gradTo})'; this.style.color='white'; this.style.boxShadow='0 4px 15px {$gradFrom}66'; this.style.transform='translateY(-2px) scale(1.03)';}\" onmouseout=\"if(!this.classList.contains('prof-active')){this.style.background='linear-gradient(135deg, {$gradFrom}{$bgAlpha}, {$gradTo}{$bgAlpha})'; this.style.color='{$textColor}'; this.style.boxShadow='none'; this.style.transform='none';}\">";
-            echo "<i class='fa fa-wifi' style='margin-right: 5px; font-size: 10px;'></i>";
-            echo htmlspecialchars(substr($profileName, 0, 18));
-            echo "</button>";
+            echo "<button type='button' class='profile-btn {$activeClass}' data-profile='" . htmlspecialchars($profileName) . "' onclick=\"setProfile('" . htmlspecialchars($profileName) . "'); GetVP();\">
+                <i class='fa {$iconClass}'></i> " . htmlspecialchars(substr($profileName, 0, 18)) . "
+            </button>";
           }
         }
         ?>
       </div>
-    </td>
-  </tr>
-  <tr>
-    <td class="align-middle"><?= $_qty ?></td>
-    <td>
-      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 4px 0;">
-        <div style="position: relative; width: 100px;">
-          <input class="form-control" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" style="border-radius: 12px; border: 2px solid #667eea88; padding: 9px 14px; font-weight: 700; font-size: 15px; text-align: center; background: var(--modern-input-bg); color: var(--modern-input-text); box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;" onfocus="this.style.borderColor='#764ba2'; this.style.boxShadow='0 0 0 3px rgba(118,75,162,0.25), 0 4px 12px rgba(0,0,0,0.3)';" onblur="this.style.borderColor='#667eea88'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';">
-        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_qty ?></div>
+    <div class="gen-input-wrap">
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 8px 0;">
+        <input class="qty-input-modern" type="number" id="qtyinput" name="qty" min="1" max="500" value="1" required="1" placeholder="Manual Qty">
+        
         <div id="quickQtyContainer" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           <?php 
           foreach ($quickQtyData as $qtyVal) {
-            echo '<div class="quick-qty-item" style="position: relative; display: inline-flex; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.25); transition: all 0.3s cubic-bezier(.4,0,.2,1);" data-qty="' . $qtyVal . '" onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 4px 16px rgba(0,0,0,0.4)\';" onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.25)\';">';
-            echo '<button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 14px 0 0 14px; padding: 8px 16px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px;" onclick="setQty(' . $qtyVal . ');"><i class="fa fa-cube" style="margin-right: 4px; font-size: 10px; opacity: 0.8;"></i>' . $qtyVal . '</button>';
-            echo '<button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #764ba2, #f5576c); color: white; border: none; border-radius: 0 14px 14px 0; padding: 8px 8px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; line-height: 1; opacity: 0.85;" onclick="deleteQuickQty(' . $qtyVal . ', this);" onmouseover="this.style.opacity=\'1\';" onmouseout="this.style.opacity=\'0.85\';" title="Hapus ' . $qtyVal . '"><i class="fa fa-times"></i></button>';
+            echo '<div class="quick-qty-item-modern" data-qty="' . $qtyVal . '">';
+            echo '<button type="button" class="quick-qty-btn" onclick="setQty(' . $qtyVal . ');"><i class="fa fa-cube" style="margin-right: 4px; opacity: 0.7;"></i>' . $qtyVal . '</button>';
+            echo '<button type="button" class="quick-qty-del" onclick="deleteQuickQty(' . $qtyVal . ', this);" title="Hapus ' . $qtyVal . '"><i class="fa fa-times"></i></button>';
             echo '</div>';
           }
           ?>
-          <!-- Add Quick Qty Button -->
-          <button type="button" class="btn btn-sm" id="btnAddQty" style="background: linear-gradient(135deg, #4dbd74, #20c997); color: white; border: none; border-radius: 14px; padding: 8px 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); box-shadow: 0 2px 8px rgba(0,0,0,0.25);" onclick="showAddQtyInput();" onmouseover="this.style.transform='translateY(-2px) scale(1.05)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.25)';" title="Tambah Quick Qty"><i class="fa fa-plus" style="margin-right: 3px;"></i> Tambah</button>
-          <!-- Add Qty Input (hidden by default) -->
-          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 6px; background: var(--modern-wrapper-bg); padding: 6px 10px; border-radius: 14px; border: 2px solid #4dbd7455; box-shadow: 0 2px 10px rgba(0,0,0,0.25);">
-            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 65px; border-radius: 10px; border: 2px solid #4dbd74; padding: 6px 8px; font-weight: 700; font-size: 13px; text-align: center; background: var(--modern-input-bg); color: var(--modern-input-text); transition: all 0.3s ease;" onfocus="this.style.boxShadow='0 0 0 3px rgba(77,189,116,0.25)';" onblur="this.style.boxShadow='none';">
-            <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #4dbd74, #20c997); color: white; border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="addQuickQty();" title="Simpan" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-check"></i></button>
-            <button type="button" class="btn btn-sm" style="background: var(--modern-btn-cancel-bg); color: var(--modern-btn-cancel-text); border: none; border-radius: 10px; padding: 7px 12px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;" onclick="hideAddQtyInput();" title="Batal" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"><i class="fa fa-times"></i></button>
+          <button type="button" class="modern-btn btn-info" id="btnAddQty" style="padding: 8px 14px; font-size: 13px;" onclick="showAddQtyInput();" title="Tambah Quick Qty"><i class="fa fa-plus" style="margin-right: 3px;"></i> Tambah</button>
+          <div id="addQtyInputWrapper" style="display: none; align-items: center; gap: 6px; background: #f8fafc; padding: 6px 10px; border-radius: 14px; border: 1px solid #e2e8f0;">
+            <input type="number" id="newQtyInput" min="1" max="999" placeholder="Qty" style="width: 65px; border-radius: 8px; border: 2px solid #e2e8f0; padding: 6px 8px; font-weight: 700; font-size: 13px; text-align: center; outline: none;" onfocus="this.style.borderColor='#3b82f6';">
+            <button type="button" class="modern-btn btn-primary" style="padding: 6px 12px;" onclick="addQuickQty();" title="Simpan"><i class="fa fa-check"></i></button>
+            <button type="button" class="modern-btn btn-secondary" style="padding: 6px 12px; background: #e2e8f0; color: #475569;" onclick="hideAddQtyInput();" title="Batal"><i class="fa fa-times"></i></button>
           </div>
         </div>
       </div>
-    </td>
-  </tr>
-  <tr>
-    <td class="align-middle">Server</td>
-    <td>
-		<select class="form-control " name="server" required="1">
+    </div>
+  </div>
+
+  <div class="gen-form-group">
+    <div class="gen-label">Server</div>
+    <div class="gen-input-wrap">
+		<select class="gen-form-control" name="server" required="1">
 			<option>all</option>
 				<?php $TotalReg = count($srvlist);
 			for ($i = 0; $i < $TotalReg; $i++) {
@@ -656,31 +890,36 @@ date_default_timezone_set($_SESSION['timezone']);
 			}
 			?>
 		</select>
-	</td>
-	</tr>
-	<tr>
-    <td class="align-middle"><?= $_user_mode ?></td><td>
-			<select class="form-control " onchange="defUserl();" id="user" name="user" required="1">
-			    <option value="vc"><?= $_user_user ?></option>
-				<option value="up"><?= $_user_pass ?></option>
-			</select>
-		</td>
-	</tr>
-  <tr>
-    <td class="align-middle"><?= $_user_length ?></td><td>
-      <select class="form-control " id="userl" name="userl" required="1">
+	</div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_user_mode ?></div>
+    <div class="gen-input-wrap">
+        <select class="gen-form-control" onchange="defUserl();" id="user" name="user" required="1">
+            <option value="vc"><?= $_user_user ?></option>
+            <option value="up"><?= $_user_pass ?></option>
+        </select>
+    </div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_user_length ?></div>
+    <div class="gen-input-wrap">
+      <select class="gen-form-control" id="userl" name="userl" required="1">
         <option value="3" selected="selected">3</option>
         <option value="4">4</option>
         <option value="5">5</option>
         <option value="6">6</option>
       </select>
-    </td>
-  </tr>
-  <tr>
-    <td class="align-middle">Reseller</td>
-    <td>
+    </div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label">Reseller</div>
+    <div class="gen-input-wrap">
       <div style="display: flex; gap: 10px; align-items: center;">
-        <select class="form-control" id="resellerselect" style="flex: 1;">
+        <select class="gen-form-control" id="resellerselect" style="flex: 1;">
           <option value="">-- Select Reseller --</option>
           <?php 
           if (is_array($resellerData) && count($resellerData) > 0) {
@@ -690,18 +929,24 @@ date_default_timezone_set($_SESSION['timezone']);
           }
           ?>
         </select>
-        <a class="btn bg-primary btn-sm" href="./?hotspot=reseller&session=<?= $session; ?>" title="Manage Reseller">
+        <a class="modern-btn btn-primary btn-sm" href="./?hotspot=reseller&session=<?= $session; ?>" title="Manage Reseller" style="white-space: nowrap; padding: 10px 14px;">
           <i class="fa fa-cog"></i> Manage
         </a>
       </div>
-    </td>
-  </tr>
-  <tr>
-    <td class="align-middle"><?= $_prefix ?></td><td><input class="form-control " type="text" size="6" maxlength="6" autocomplete="off" id="prefixinput" name="prefix" value=""></td>
-  </tr>
-  <tr>
-    <td class="align-middle"><?= $_character ?></td><td>
-      <select class="form-control " name="char" required="1">
+    </div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_prefix ?></div>
+    <div class="gen-input-wrap">
+        <input class="gen-form-control" type="text" size="6" maxlength="6" autocomplete="off" id="prefixinput" name="prefix" value="">
+    </div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_character ?></div>
+    <div class="gen-input-wrap">
+      <select class="gen-form-control" name="char" required="1">
                 <option id="mix1" style="display:block;" value="mix1"><?= $_random ?> 5AB2C34D</option>
 				<option id="lower" style="display:block;" value="lower"><?= $_random ?> abcd</option>
 				<option id="upper" style="display:block;" value="upper"><?= $_random ?> ABCD</option>
@@ -713,89 +958,76 @@ date_default_timezone_set($_SESSION['timezone']);
 				<option id="mix2" style="display:block;" value="mix2"><?= $_random ?> 5aB2c34D</option>
 				<option id="num" style="display:none;" value="num"><?= $_random ?> 1234</option>
 			</select>
-    </td>
-  </tr>
-	<tr>
-    <!-- <td class="align-middle"><?= $_time_limit ?></td><td><input class="form-control " type="text" size="4" autocomplete="off" name="timelimit" value=""></td>
-  </tr>
-	<tr>
-    <td class="align-middle"><?= $_data_limit ?></td><td>
-      <div class="input-group">
-      	<div class="input-group-10 col-box-9">
-        	<input class="group-item group-item-l" type="number" min="0" max="9999" name="datalimit" value="<?= $udatalimit; ?>">
-    	</div>
-          <div class="input-group-2 col-box-3">
-              <select style="padding:4.2px;" class="group-item group-item-r" name="mbgb" required="1">
-				        <option value=1048576>MB</option>
-				        <option value=1073741824>GB</option>
-			        </select>
-          </div>
-      </div>
-    </td> -->
-  </tr>
-	<tr>
-    <td class="align-middle"><?= $_comment ?></td><td><input class="form-control " type="text" title="No special characters" id="comment" autocomplete="off" name="adcomment" value="" placeholder="Auto: BULAN-PROFILE-PREFIX" style="border-radius: 6px; border: 2px solid #e0e0e0; padding: 8px 12px; font-weight: 500;"></td>
-  </tr>
-   <tr >
-    <td  colspan="4" class="align-middle w-12"  id="GetValidPrice">
-    	<?php if ($genprof != "") {
-					echo $ValidPrice;
-				} ?>
-    </td>
-  </tr>
-</table>
+    </div>
+  </div>
+  
+  <div class="gen-form-group">
+    <div class="gen-label"><?= $_comment ?></div>
+    <div class="gen-input-wrap">
+        <input class="gen-form-control" type="text" title="No special characters" id="comment" autocomplete="off" name="adcomment" value="" placeholder="Auto: BULAN-PROFILE-PREFIX">
+    </div>
+  </div>
+  
+  <?php if ($genprof != "") { ?>
+  <div class="gen-form-group" style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 10px; padding: 12px; margin-top: 10px; color: #059669; text-align: center; justify-content: center;">
+      <div id="GetValidPrice" style="font-size: 14px;"><?= $ValidPrice ?></div>
+  </div>
+  <?php } else { ?>
+  <div id="GetValidPrice" style="display: none; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 10px; padding: 12px; margin-top: 10px; color: #059669; text-align: center; font-size: 14px;"></div>
+  <?php } ?>
+</div>
 </form>
 </div>
 </div>
 </div>
 
-<div class="col-4">
-	<div class="card">
-		<div class="card-header">
-			<h3><i class="fa fa-ticket"></i> <?= $_last_generate ?></h3>
+<div class="row">
+<div class="col-12">
+	<div class="gen-card">
+		<div class="gen-header success">
+            <div class="gen-header-icon">
+                <i class="fa fa-ticket"></i>
+            </div>
+            <div class="gen-header-text">
+                <h3><?= $_last_generate ?></h3>
+            </div>
 		</div>
-		<div class="card-body">
-<table class="table table-bordered">
-  <tr>
-  	<td><?= $_generate_code ?></td><td><?= $ucode ?></td>
-  </tr>
-  <tr>
-  	<td><?= $_date ?></td><td><?= $udate ?></td>
-  </tr>
-  <tr>
-  	<td><?= $_profile ?></td><td><?= $uprofile ?></td>
-  </tr>
-  <tr>
-  	<td><?= $_validity ?></td><td><?= $uvalid ?></td>
-  <tr>
-  	<!-- <td><?= $_time_limit ?></td><td><?= $utlimit ?></td>
-  </tr>
-  <tr>
-  	<td><?= $_data_limit ?></td><td><?= $udlimit ?></td>
-  </tr>
-  <tr>
-  	<td><?= $_price ?></td><td><?= $uprice ?></td>
-  </tr> -->
-  <tr>
-  	<td><?= $_selling_price ?></td><td><?= $suprice ?></td>
-  </tr>
-  <tr>
-  	<td><?= $_lock_user ?></td><td><?= $ulock ?></td>
-  </tr>
-  <tr>
-    <td colspan="2">
-		<p style="padding:0px 5px;">
-      <?= $_format_time_limit ?>
-    </p>
-    <p style="padding:0px 5px;">
-      <?= $_details_add_user ?>
-    </p>
-    </td>
-  </tr>
-</table>
+		<div class="gen-body">
+            <table class="gen-table">
+            <tr>
+                <td><?= $_generate_code ?></td><td><b><?= $ucode ?></b></td>
+            </tr>
+            <tr>
+                <td><?= $_date ?></td><td><b><?= $udate ?></b></td>
+            </tr>
+            <tr>
+                <td><?= $_profile ?></td><td><b><?= $uprofile ?></b></td>
+            </tr>
+            <tr>
+                <td><?= $_validity ?></td><td><b><?= $uvalid ?></b></td>
+            <tr>
+            <tr>
+                <td><?= $_selling_price ?></td><td><b><?= $suprice ?></b></td>
+            </tr>
+            <tr>
+                <td><?= $_lock_user ?></td><td><b><?= $ulock ?></b></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="background: #f8fafc; text-align: center; border-radius: 12px;">
+                    <p style="padding: 4px 5px; margin: 0; font-size: 13px; color: #475569;">
+                    <?= $_format_time_limit ?>
+                    </p>
+                    <p style="padding: 4px 5px; margin: 0; font-size: 13px; color: #475569;">
+                    <?= $_details_add_user ?>
+                    </p>
+                </td>
+            </tr>
+            </table>
+        </div>
+    </div>
 </div>
 </div>
-</div>
+</div> <!-- End gen-container -->
 <script>
 // Current month name (Indonesian)
 var currentBulan = '<?= $currentBulan ?>';
