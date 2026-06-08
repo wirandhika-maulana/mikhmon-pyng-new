@@ -78,7 +78,9 @@ if (!isset($_SESSION["mikhmon"])) {
         }
         
         if ($prefix != "") {
-            $dtsecret = $API->comm("/ppp/secret/print");
+            $dtsecret = $API->comm("/ppp/secret/print", array(
+                ".proplist" => "name"
+            ));
             if (!is_array($dtsecret)) $dtsecret = [];
             
             $maxId = 0;
@@ -116,7 +118,7 @@ if (!isset($_SESSION["mikhmon"])) {
 
 .secret-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    max-width: 720px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
