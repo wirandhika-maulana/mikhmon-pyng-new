@@ -380,8 +380,13 @@ if (!isset($_SESSION["mikhmon"])) {
           </div>
            
 			<div class="card">
-				<div class="card-header">
+				<div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
 					<h3><i class="fa fa-area-chart"></i> <?= $_traffic ?> </h3>
+                    <div style="margin-top: 5px;">
+                        <span style="font-size: 11px; color:#888; margin-right:8px;">*Live grafik memicu log API</span>
+                        <button id="btnStartTraffic" class="btn bg-primary" style="padding: 4px 10px; font-size:13px;" onclick="startTraffic()"><i class="fa fa-play"></i> Live Traffic</button>
+                        <button id="btnStopTraffic" class="btn bg-danger" style="padding: 4px 10px; font-size:13px; display:none;" onclick="stopTraffic()"><i class="fa fa-stop"></i> Stop</button>
+                    </div>
 				</div>
 
 
@@ -400,6 +405,27 @@ if (!isset($_SESSION["mikhmon"])) {
                     var sessiondata = "<?= $session ?>";
                     var interface = "<?= $interface ?>";
                     var n = 3000;
+                    var trafficInterval;
+
+                    function startTraffic() {
+                        document.getElementById('btnStartTraffic').style.display = 'none';
+                        document.getElementById('btnStopTraffic').style.display = 'inline-block';
+                        // Fetch first point immediately
+                        requestDatta(sessiondata,interface);
+                        // Then interval
+                        trafficInterval = setInterval(function () {
+                            requestDatta(sessiondata,interface);
+                        }, 8000);
+                    }
+
+                    function stopTraffic() {
+                        document.getElementById('btnStopTraffic').style.display = 'none';
+                        document.getElementById('btnStartTraffic').style.display = 'inline-block';
+                        if(trafficInterval) {
+                            clearInterval(trafficInterval);
+                        }
+                    }
+
                     function requestDatta(session,iface) {
                       $.ajax({
                         url: './traffic/traffic.php?session='+session+'&iface='+iface,
@@ -445,9 +471,7 @@ if (!isset($_SESSION["mikhmon"])) {
                           type: 'areaspline',
                           events: {
                             load: function () {
-                              setInterval(function () {
-                                requestDatta(sessiondata,interface);
-                              }, 8000);
+                              // setInterval removed to prevent MikroTik API log flooding
                             }				
                           }
                         },

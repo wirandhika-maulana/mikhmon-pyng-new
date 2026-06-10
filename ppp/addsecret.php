@@ -7,8 +7,8 @@ if (!isset($_SESSION["mikhmon"])) {
     header("Location:../admin.php?id=login");
 } else {
     include "ppp/function.php";
-    $getprofile = $API->comm("/ppp/profile/print");
     
+    // Handle save FIRST — before loading profiles to avoid unnecessary API calls
     if (isset($_POST['save'])) {
         $name 		= (preg_replace('/\s+/', '', $_POST['name']));
         $password 	= ($_POST['password']);
@@ -48,13 +48,16 @@ if (!isset($_SESSION["mikhmon"])) {
         
         if (strpos(strtolower($cek), '!trap')) {
             $text	= str_replace(":","\n",explode('"',$cek)[5])."\n";
-            echo "<script>window.location='./?info=Gagal|".$text."|Silahkan di cek ulang&session=" . $session . "'</script>";
-        } elseif (empty($addppp) || $addppp === false) {
-            echo "<script>window.location='./?info=Gagal|Tidak dapat terhubung ke MikroTik atau response kosong&session=" . $session . "'</script>";
+            echo "<script>window.location='./?ppp=addsecret&session=" . $session . "&info=Gagal|".$text."|Silahkan di cek ulang'</script>";
+        } elseif (empty($addppp) && $addppp !== "*0" && !is_string($addppp)) {
+            echo "<script>window.location='./?ppp=addsecret&session=" . $session . "&info=Gagal|Tidak dapat terhubung ke MikroTik atau response kosong'</script>";
         } else {
-            echo "<script>window.location='./?ppp=secrets&profile=all&session=" . $session . "&info=Berhasil|User " . $name . " berhasil ditambahkan'</script>";
+            echo "<script>window.location='./?ppp=addsecret&session=" . $session . "&info=Berhasil|User " . $name . " berhasil ditambahkan'</script>";
         }
-    }
+    } else {
+    
+    // Load profiles only when displaying the form (not during save)
+    $getprofile = $API->comm("/ppp/profile/print");
     
     // Auto-Generate Logic
     $selectedProfile = "";
@@ -701,3 +704,4 @@ function selectProfile(btn, profileName, profileId) {
     location = './?ppp=addsecret&session=<?= $session ?>&nprof=' + profileName + '&idprof=' + profileId;
 }
 </script>
+<?php } ?>

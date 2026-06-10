@@ -67,6 +67,8 @@ if (!isset($_SESSION["mikhmon"])) {
 // routeros api
   include_once('./lib/routeros_api.class.php');
   include_once('./lib/formatbytesbites.php');
+  include_once('./include/cache.php');
+  
   $API = new RouterosAPI();
   $API->debug = false;
 
@@ -172,6 +174,7 @@ if (!isset($_SESSION["mikhmon"])) {
   $tripay= $_GET['tri-pay'];
   $info=$_GET['info'];
   $wagateway=isset($_GET['wagateway']) ? $_GET['wagateway'] : '';
+  $telegrambot=isset($_GET['telegrambot']) ? $_GET['telegrambot'] : '';
 
   $pagehotspot = array('users','hosts','ipbinding','cookies','log','dhcp-leases');
   $pageppp = array('secrets','profiles','active','addsecret','billing','history');
@@ -450,6 +453,11 @@ elseif ($removeexpiredhotspotuser != "") {
     include_once('./wagateway/wagateway.php');
   }
 
+// telegram bot
+  elseif (isset($_GET['telegrambot']) && $_GET['telegrambot'] == "settings") {
+    include_once('./telegrambot/telegrambot.php');
+  }
+
 // upload logo
   elseif ($hotspot == "uplogo") {
     include_once('./settings/uplogo.php');
@@ -470,6 +478,10 @@ elseif ($removeexpiredhotspotuser != "") {
 // hotspot Ip Bindings
   elseif ($hotspot == "ipbinding") {
     include_once('./hotspot/ipbinding.php');
+  }
+// add ip binding
+  elseif ($hotspot == "add-ipbinding") {
+    include_once('./hotspot/addipbinding.php');
   }
 //make binding
   elseif ($hotspot == "binding-ip") {
@@ -637,15 +649,7 @@ elseif ($ppp == "edit-profile") {
 if ($hotspot == "dashboard" || substr(end(explode("/", $url)), 0, 8) == "?session") {
 	echo '<script>
 		$("#r_3").load("./dashboard/aload.php?session=' . $session . '&load=logs #r_3");  
-		var interval1 = "' . ($areload * 1000) . '";
-		var dashboard = setInterval(function() {
-      
-		$("#r_1").load("./dashboard/aload.php?session=' . $session . '&load=sysresource #r_1"); 
-		$("#r_2").load("./dashboard/aload.php?session=' . $session . '&load=hotspot #r_2"); 
-		$("#r_3").load("./dashboard/aload.php?session=' . $session . '&load=logs #r_3"); 
-    
-	}, interval1);
-
+		// Auto-refresh removed to prevent router log flooding
 	';
 	if ($livereport == "enable" || $livereport == "") {
 		if($_SESSION[$session.'sdate'] != $_SESSION[$session.'idhr']){
@@ -656,68 +660,29 @@ if ($hotspot == "dashboard" || substr(end(explode("/", $url)), 0, 8) == "?sessio
 			echo '$("#r_4").load("./report/livereport.php?session=' . $session . ' #r_4");';
 		}
 		echo  '
-		var interval2 = "65432";
-		var livereport = setInterval(function() {
-			$("#r_4").load("./report/livereport.php?session=' . $session . ' #r_4"); 
-		}, interval2);
+		// Live report auto-refresh removed to prevent log flooding
 	';}
   echo ' 
   function cancelPage(){
     window.stop();
-    clearInterval(dashboard);';
-    if ($livereport == "enable" || $livereport == "") {
-    echo '
-    clearInterval(livereport);';
-    }
-  echo '
-    }
+  }
 </script>';
 
 } elseif ($hotspot == "active" && $serveractive != "") {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadHotspotActive").load("./hotspot/hotspotactive.php?server=' . $serveractive . '&session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed to prevent router log flooding
 } elseif ($hotspot == "active" && $serveractive == "") {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadHotspotActive").load("./hotspot/hotspotactive.php?session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed to prevent router log flooding
 } elseif ($ppp == "active" ) {
   // Auto-refresh removed to prevent router log flooding
 } elseif ($ppp == "nonactive" ) {
   // Auto-refresh removed to prevent router log flooding
 
 } elseif ($minterface == "netwatch" ) {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadNetwacthActive").load("./traffic/netwatch.php?session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed
 } elseif ($minterface == "netwatchup" ) {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadNetwacthActive").load("./traffic/netwatchup.php?session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed
 } elseif ($minterface == "netwatchdown" ) {
-  echo '<script>
-  $(document).ready(function(){
-    var interval = "' . ($areload * 1000) . '";
-    setInterval(function() {
-    $("#reloadNetwacthActive").load("./traffic/netwatchdown.php?session=' . $session . '"); }, interval);})
-	</script>
-	';
+  // Auto-refresh removed
 } elseif ($userprofile == "add" || substr($userprofile, 0, 1) == "*" || $userprofile != "") {
   echo "<script>
   //enable disable input on ready

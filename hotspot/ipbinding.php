@@ -11,6 +11,17 @@ if (!isset($_SESSION["mikhmon"])) {
 	$countbinding = $API->comm("/ip/hotspot/ip-binding/print", array(
 		"count-only" => "",
 	));
+
+	// Batch fetch netwatch data once (instead of per-row N+1 queries)
+	$allNetwatch = $API->comm("/tool/netwatch/print");
+	$netwatch_hosts = [];
+	if (is_array($allNetwatch)) {
+		foreach ($allNetwatch as $nw) {
+			if (isset($nw['host'])) {
+				$netwatch_hosts[$nw['host']] = true;
+			}
+		}
+	}
 }
 
 ?>
@@ -28,6 +39,7 @@ if ($countbinding < 2) {
 };
 ?>
 					</h3>
+					<a href="./?hotspot=add-ipbinding&session=<?= $session; ?>" class="btn-add-binding" style="float:right;margin-top:-30px;padding:6px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;"><i class="fa fa-plus"></i> Add Binding</a>
 				</div>
 				<div class="card-body">	   
 					<div class="w-6">
@@ -90,8 +102,9 @@ for ($i = 0; $i < $TotalReg; $i++) {
 		echo "<td>" . $type. "</td>";
 		echo "<td>" . $commt . "</td>";
 
-		$ceknetwatch = $API->comm("/tool/netwatch/print",["?host" => "$toaddr"]);
-		if (empty($ceknetwatch)) {
+		// Use pre-fetched netwatch data instead of per-row API call
+		$is_netwatched = isset($netwatch_hosts[$toaddr]);
+		if (!$is_netwatched) {
 			echo "<td><a title='Netwatch Mac ".$maca."\nIp ".$toaddr."\nKlik untuk melakukan Netwatch' href='./?interface=add-netwatch&iphost=".$toaddr."&flag=B&session=".$session."'><b>".$maca."</b></a></td>";
 		}else{
 			echo "<td style='cursor:pointer;' title='Ip ".$toaddr."\nSudah di Netwatch.'><a href='./?interface=netwatch&session=".$session."'>".$toaddr."</a></td>";

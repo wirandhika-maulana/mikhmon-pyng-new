@@ -39,30 +39,6 @@ if (!isset($_SESSION["mikhmon"])) {
       $newcontent = str_replace((string)$cari[$i], (string)$ganti[$i], "$content");
       file_put_contents("./include/config.php", "$newcontent");
     }
-	$cek=$_POST['kvcr'];
-	if ($cek=="1") {
-		$hasil="123456789";
-	}elseif ($cek=="1") {
-		$hasil="ABCDEFGHI";
-	}elseif ($cek=="3") {
-		$hasil="abcdefghi";
-	}elseif ($cek=="4") {
-		$hasil="ABCDabcde";
-	}elseif ($cek=="5") {
-		$hasil="AbcABC123";
-	}elseif ($cek=="6") {
-		$hasil="abcde1234";
-	}elseif ($cek=="7") {
-		$hasil="ABCDE1234";
-	}else{
-		$hasil="ABCade123";
-	}
-	
-	$file="./webhook/settingvcr.php";
-	$mtul=$_POST['pvcr']."^".$_POST['kvcr']."^".$_POST['avcr']."^".$_POST['mvcr']."^\n\nKeterangan.\n".str_repeat("=",55)."\n1. Panjang kode Voucher ".$_POST['pvcr']." Huruf.\n2. Kombinasi Kode Voucher ".$hasil.".\n3. Awalan Kode Voucher.1-Tanpa Awalan, 2-Dgn Awalan\n4. Bentuk Voucher. 1-Member,2-Vcr\n".str_repeat("=",55)."\ncreat by :\nhttps://www.mimoassist.homes\nhttps://www.facebook.com/groups/788642016459380/?ref=share&mibextid=NSMWBT";
-	$handle = fopen($file, 'w') or die('Cannot open file:  ' . $file);
-	fwrite($handle, $mtul);
-	fclose($handle);
 
     $gen = '<?php $qrbt="' . $qrbt . '";?>';
     $key = './include/quickbt.php';
@@ -173,84 +149,7 @@ if (!isset($_SESSION["mikhmon"])) {
                     </select>
                   </td>
                 </tr>
-				<?php
-				$xfile="./webhook/settingvcr.php";
-				$pvcr="3";
-				$kvcr="7";
-				$avcr="2";
-				$mvcr="2";
-				if (file_exists($xfile)) {
-					$pvcr=explode("^",file_get_contents($xfile))[0];
-					$kvcr=explode("^",file_get_contents($xfile))[1];
-					$avcr=explode("^",file_get_contents($xfile))[2];
-					$mvcr=explode("^",file_get_contents($xfile))[3];
-				}
-				echo "<tr><td colspan='2'><h3><i class='fa fa-cc'></i> Format Voucher</td></tr>
-				<tr><td>Panjang Kode </td><td>
-                    <select class='form-control' name='pvcr'>";
-					for ($x=3;$x<9;$x++) {
-						if ($x==$pvcr) {
-							echo "<option value='".$x."' selected >".$x." Huruf</option>";
-						}else{
-							echo "<option value='".$x."'>".$x." Huruf</option>";
-						}
-					}	
-				echo"</select>
-				</td></tr>";
-				$kvcr1=$kvcr2=$kvcr3=$kvcr4=$kvcr5=$kvcr6=$kvcr7=$kvcr8=$avcr1=$avcr2=$mvcr1=$mvcr2="";
-				if ($kvcr==1) {
-					$kvcr1="selected";
-				}elseif ($kvcr==2) {
-					$kvcr2="selected";
-				}elseif ($kvcr==3) {
-					$kvcr3="selected";
-				}elseif ($kvcr==4) {
-					$kvcr4="selected";
-				}elseif ($kvcr==5) {
-					$kvcr5="selected";
-				}elseif ($kvcr==6) {
-					$kvcr6="selected";
-				}elseif ($kvcr==7) {
-					$kvcr7="selected";
-				}elseif ($kvcr==8) {
-					$kvcr8="selected";
-				}
-				if ($avcr==1) {
-					$avcr1="selected";
-				}else{
-					$avcr2="selected";
-				}
-				if ($mvcr==1) {
-					$mvcr1="selected";
-				}else{
-					$mvcr2="selected";
-				}
-				?>
-				<tr><td>Jenis Kombinasi </td><td>
-                    <select class="form-control" name="kvcr">
-					<option value="1" <?=$kvcr1 ?> >123456789</option>
-					<option value="2" <?=$kvcr2 ?> >ABCDEFGHI</option>
-					<option value="3" <?=$kvcr3 ?> >abcdefghi</option>
-					<option value="4" <?=$kvcr4 ?> >ABCDabcde</option>
-					<option value="5" <?=$kvcr5 ?> >AbcABC123</option>
-					<option value="6" <?=$kvcr6 ?> >abcde1234</option>
-					<option value="7" <?=$kvcr7 ?> >ABCDE1234</option>
-					<option value="8" <?=$kvcr8 ?> >ABCade123</option>
-                    </select>
-				</td></tr>
-				<tr><td>Prefix / Awalan </td><td>
-                    <select class="form-control" name="avcr">
-                      <option value="1" <?=$avcr1 ?> >No [ Tanpa Awalan ]</option>
-                      <option value="2" <?=$avcr2 ?> >Yes [ Awalan Uptime ]</option>
-                    </select>
-				</td></tr>
-				<tr><td>Voucher / Member </td><td>
-                    <select class="form-control" name="mvcr">
-                      <option value="1" <?=$mvcr1 ?> >Member</option>
-                      <option value="2" <?=$mvcr2 ?> >Voucher</option>
-                    </select>
-				</td></tr>
-                <tr><td colspan='2'>&nbsp</td></tr>
+
 				<tr>
                   <td></td><td class="text-right">
                     <div class="input-group-4">

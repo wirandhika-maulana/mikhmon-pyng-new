@@ -165,7 +165,7 @@ if (!isset($_SESSION["mikhmon"])) {
 											echo '&nbsp&nbsp&nbsp<span class="pointer" title="Disable User ' .$getsecret[$i]['name']. '"  onclick="loadpage(' . $sprocess . ')"><i class="fa fa-unlock "></i></span>';
 										}
 										echo "&nbsp&nbsp&nbsp <a title='Edit User secret ".$getsecret[$i]['name']."' href='./?secret=".$getsecret[$i]['.id']."&schedulerbyname=".$getsecret[$i]['name']."&session=".$session."'><i class='fa fa-edit'></i></a>";
-										echo "&nbsp&nbsp&nbsp <a title='Billing User Secret\nusername ".$getsecret[$i]['name']."\nprice [ ".rupiah(caridtharga1($getsecret[$i]['profile']))." ]' href='./?ppp=billing&idsecret=".$getsecret[$i]['.id']."&session=" . $session . "'><i class='fa fa-money' aria-hidden='true'></i></b>&nbsp";
+										echo "&nbsp&nbsp&nbsp <a title='Billing User Secret\nusername ".$getsecret[$i]['name']."\nprice [ ".rupiah(caridtharga1($getsecret[$i]['profile']))." ]' href='./?ppp=billing&idsecret=".$getsecret[$i]['.id']."&session=" . $session . "'><i class='fa fa-money' aria-hidden='true'></i></a>&nbsp";
 										?>
 									</td>
 								<?php

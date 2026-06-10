@@ -510,6 +510,9 @@ include('./info.php');
   <!--wa gateway-->
   <a href="./?wagateway=settings&session=<?= $session; ?>" class="menu <?= $swagateway; ?>"> <i class="fa fa-whatsapp "></i> WA Gateway </a>
 
+  <!--telegram bot-->
+  <a href="./?telegrambot=settings&session=<?= $session; ?>" class="menu <?= $stelegrambot; ?>"> <i class="fa fa-telegram "></i> Telegram Bot </a>
+
   <!--setwebhook-$swebhook-->
   <!-- <div class="dropdown-btn <?= $sweb; ?>"><i class="fa fa-linux "></i> Settings Bot
     <i class="fa fa-caret-down"></i> &nbsp;

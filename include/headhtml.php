@@ -47,10 +47,7 @@ error_reporting(0);
 		<!-- pace -->
 		<link href="css/pace.<?= $theme; ?>.css" rel="stylesheet" />
 		<script src="js/pace.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script> $(document).ready(function(){ setInterval(function(){   $("h6").load("./webhook/coret.php");$("h7").load("./webhook/corelog.php");$("h8").load("./webhook/statusbotwa.php");}, 10000) }  ); </script>	
 
-		
 	</head>
 	<body class="theme-<?= $theme; ?>">
 		<div class="wrapper">
