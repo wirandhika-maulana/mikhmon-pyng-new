@@ -23,7 +23,9 @@ if (!isset($_SESSION["mikhmon"])) {
 } else {
 	include "ppp/function.php";
 	// get ppp profile
-	$getprofile = $API->comm("/ppp/profile/print");
+	$getprofile = $API->comm("/ppp/profile/print", array(
+		".proplist" => ".id,name,local-address,remote-address,dns-server,bridge,rate-limit,only-one,default"
+	));
 	$TotalReg = count($getprofile);
 	// count ppp profile (no need for extra API call)
 	$countprofile = $TotalReg;
