@@ -36,7 +36,7 @@ $API = new RouterosAPI();
 $API->debug = false;
   
   $use_dual_router = false;
-  if (file_exists('../include/dual_router_config.php')) {
+  if (file_exists('../include/dual_router_config.php') && (!isset($_GET['router']) || $_GET['router'] != 'A')) {
       include('../include/dual_router_config.php');
       if (isset($dual_router[$session])) {
           $use_dual_router = true;

@@ -6,147 +6,274 @@ if (!isset($_SESSION["mikhmon"])) {
   header("Location:../admin.php?id=login");
 } else {
 
+  // Fetch Board Name and Interfaces for Router A
+  $getresource_a = $API->comm("/system/resource/print");
+  $board_name_a = isset($getresource_a[0]['board-name']) ? $getresource_a[0]['board-name'] : 'Unknown';
+  $getinterface_a = $API->comm("/interface/print");
+  $TotalReg_a = count($getinterface_a);
+
+  // Connect to Router B and Fetch
+  $use_dual = false;
+  $board_name_b = "Router B";
+  $getinterface_b = array();
+  $TotalReg_b = 0;
+
+  if (file_exists('./include/dual_router_config.php')) {
+      include('./include/dual_router_config.php');
+      if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+          $dual_router_ip = $dual_router[$session]['ip'];
+          $dual_router_user = $dual_router[$session]['user'];
+          $dual_router_pass = decrypt($dual_router[$session]['pass']);
+          
+          $API_B = new RouterosAPI();
+          $API_B->debug = false;
+          if ($API_B->connect($dual_router_ip, $dual_router_user, $dual_router_pass)) {
+              $use_dual = true;
+              $getresource_b = $API_B->comm("/system/resource/print");
+              if (isset($getresource_b[0]['board-name'])) {
+                  $board_name_b = $getresource_b[0]['board-name'];
+              }
+              $getinterface_b = $API_B->comm("/interface/print");
+              $TotalReg_b = count($getinterface_b);
+              $API_B->disconnect();
+          }
+      }
+  }
 
 }
 ?>
-<script>
-   var _0x381f=["\x63\x68\x61\x6E\x67\x65","\x76\x61\x6C","\x49\x6E\x74\x65\x72\x66\x61\x63\x65\x5F","\x76\x61\x6C\x75\x65","\x4D\x69\x6B\x68\x6D\x6F\x6E\x53\x65\x73\x73\x69\x6F\x6E","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\x73\x65\x74\x49\x74\x65\x6D","\x50\x6C\x65\x61\x73\x65\x20\x75\x73\x65\x20\x47\x6F\x6F\x67\x6C\x65\x20\x43\x68\x72\x6F\x6D\x65","\x72\x65\x6C\x6F\x61\x64","\x6C\x6F\x63\x61\x74\x69\x6F\x6E","\x6F\x6E","\x23\x64\x5F\x69\x6E\x74\x65\x72\x66\x61\x63\x65"];$(function(){$(_0x381f[12])[_0x381f[11]](_0x381f[0],function(){var _0xd273x1=$(this)[_0x381f[1]]();var _0xd273x2=_0x381f[2]+ document[_0x381f[5]](_0x381f[4])[_0x381f[3]];if(_0xd273x1){if( typeof (Storage)!== _0x381f[6]){sessionStorage[_0x381f[7]](_0xd273x2,_0xd273x1)}else {alert(_0x381f[8])};window[_0x381f[10]][_0x381f[9]]()};return false})})
-</script>
-          <div class="card">
-            <div class="card-header"><h3><i class="fa fa-area-chart"></i> <?= $_traffic_monitor ?> </h3></div>
+          <!-- ROUTER A (HOTSPOT) -->
+          <div class="card mb-3">
+            <div class="card-header"><h3><i class="fa fa-area-chart"></i> Traffic Monitor <?= $board_name_a ?> (Hotspot) </h3></div>
               <div class="card-body">
                 <div class="row">
-                  <?php $getinterface = $API->comm("/interface/print");
-                  $interface = $getinterface[$iface - 1]['name'];
-                  $TotalReg = count($getinterface);
-
-                  ?>
                   <div class="col-12">
-                  <select id="d_interface" class="dropd pd-5" name="iface">
-                    <option><?= $_select_interface ?></option>
+                  <select id="d_interface_a" class="dropd pd-5" name="iface_a">
+                    <option value=""><?= $_select_interface ?></option>
                     <?php 
-                      for ($i = 0; $i < $TotalReg; $i++) {
+                      for ($i = 0; $i < $TotalReg_a; $i++) {
                         $no=$i+1;
-						$nc=$no+1;
-						if ($iface==$nc) {
-							echo '<option value="' . $getinterface[$i]['name'] . '" selected> [ '.$no.'] - ' . $getinterface[$i]['name'] . '</option>';
-						}else{
-							echo '<option value="' . $getinterface[$i]['name'] . '"> [ '.$no.'] - ' . $getinterface[$i]['name'] . '</option>';
-						}
+						echo '<option value="' . $getinterface_a[$i]['name'] . '"> [ '.$no.'] - ' . $getinterface_a[$i]['name'] . '</option>';
 					}
                     ?>
                   </select>
                   </div>
-                  <script type="text/javascript"> 
-                    var chart;
-                    var sessiondata = "<?= $session ?>";
-
-                    function requestDatta(session,iface) {
-                      $.ajax({
-                        url: './traffic/traffic.php?session='+session+'&iface='+iface,
-                        datatype: "json",
-                        success: function(data) {
-                          var midata = JSON.parse(data);
-                          if( midata.length > 0 ) {
-                            var TX=parseInt(midata[0].data);
-                            var RX=parseInt(midata[1].data);
-                            var x = (new Date()).getTime(); 
-                            shift=chart.series[0].data.length > 19;
-                            chart.series[0].addPoint([x, TX], true, shift);
-                            chart.series[1].addPoint([x, RX], true, shift);
-                          }
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                          console.error("Status: " + textStatus + " request: " + XMLHttpRequest); console.error("Error: " + errorThrown); 
-                        }       
-                      });
-                    }	
-
-                    $(document).ready(function() {
-                        Highcharts.setOptions({
-                          global: {
-                            useUTC: false
-                          },
-                          chart: {
-                            height: 500,
-
-                          },
-                        });
-
-                        Highcharts.addEvent(Highcharts.Series, 'afterInit', function () {
-	                        this.symbolUnicode = {
-    	                    circle: '●',
-                          diamond: '♦',
-                          square: '■',
-                          triangle: '▲',
-                          'triangle-down': '▼'
-                          }[this.symbol] || '●';
-                        });
-
-                          chart = new Highcharts.Chart({
-                          chart: {
-                          renderTo: 'trafficMonitor',
-                          animation: Highcharts.svg,
-                          type: 'areaspline',
-                          events: {
-                            load: function () {
-                              setInterval(function () {
-                                var _0xe05e=["\x49\x6E\x74\x65\x72\x66\x61\x63\x65\x5F","\x76\x61\x6C\x75\x65","\x4D\x69\x6B\x68\x6D\x6F\x6E\x53\x65\x73\x73\x69\x6F\x6E","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x67\x65\x74\x49\x74\x65\x6D"];var sesIface=_0xe05e[0]+ document[_0xe05e[3]](_0xe05e[2])[_0xe05e[1]];var interface=sessionStorage[_0xe05e[4]](sesIface)
-                                requestDatta(sessiondata,interface);
-                                chart.setTitle({ text: '<?= $_interface ?> ' + interface });
-                              }, 3000);
-                            }				
-                          }
-                        },
-                        title: {
-                          text: '<?= $_loading_interface ?>...'
-                        },
-                        
-                        xAxis: {
-                          type: 'datetime',
-                          tickPixelInterval: 150,
-                          maxZoom: 20 * 1000,
-                        },
-                        yAxis: {
-                            minPadding: 0.2,
-                            maxPadding: 0.2,
-                            title: {
-                              text: null
-                            },
-                            labels: {
-                              formatter: function () {      
-                                var bytes = this.value;                          
-                                var sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
-                                if (bytes == 0) return '0 bps';
-                                var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-                                return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];                    
-                              },
-                            },       
-                        },
-                        
-                        series: [{
-                          name: 'Tx',
-                          data: [],
-                          marker: {
-                            symbol: 'circle'
-                          }
-                        }, {
-                          name: 'Rx',
-                          data: [],
-                          marker: {
-                            symbol: 'circle'
-                          }
-                        }],
-
-                        tooltip: {
-                          formatter: function () { 
-                            var _0x2f7f=["\x70\x6F\x69\x6E\x74\x73","\x79","\x62\x70\x73","\x6B\x62\x70\x73","\x4D\x62\x70\x73","\x47\x62\x70\x73","\x54\x62\x70\x73","\x3C\x73\x70\x61\x6E\x20\x73\x74\x79\x6C\x65\x3D\x22\x63\x6F\x6C\x6F\x72\x3A","\x63\x6F\x6C\x6F\x72","\x73\x65\x72\x69\x65\x73","\x3B\x20\x66\x6F\x6E\x74\x2D\x73\x69\x7A\x65\x3A\x20\x31\x2E\x35\x65\x6D\x3B\x22\x3E","\x73\x79\x6D\x62\x6F\x6C\x55\x6E\x69\x63\x6F\x64\x65","\x3C\x2F\x73\x70\x61\x6E\x3E\x3C\x62\x3E","\x6E\x61\x6D\x65","\x3A\x3C\x2F\x62\x3E\x20\x30\x20\x62\x70\x73","\x70\x75\x73\x68","\x6C\x6F\x67","\x66\x6C\x6F\x6F\x72","\x3A\x3C\x2F\x62\x3E\x20","\x74\x6F\x46\x69\x78\x65\x64","\x70\x6F\x77","\x20","\x65\x61\x63\x68","\x3C\x62\x3E\x4D\x69\x6B\x68\x6D\x6F\x6E\x20\x54\x72\x61\x66\x66\x69\x63\x20\x4D\x6F\x6E\x69\x74\x6F\x72\x3C\x2F\x62\x3E\x3C\x62\x72\x20\x2F\x3E\x3C\x62\x3E\x54\x69\x6D\x65\x3A\x20\x3C\x2F\x62\x3E","\x25\x48\x3A\x25\x4D\x3A\x25\x53","\x78","\x64\x61\x74\x65\x46\x6F\x72\x6D\x61\x74","\x3C\x62\x72\x20\x2F\x3E","\x20\x3C\x62\x72\x2F\x3E\x20","\x6A\x6F\x69\x6E"];var s=[];$[_0x2f7f[22]](this[_0x2f7f[0]],function(_0x3735x2,_0x3735x3){var _0x3735x4=_0x3735x3[_0x2f7f[1]];var _0x3735x5=[_0x2f7f[2],_0x2f7f[3],_0x2f7f[4],_0x2f7f[5],_0x2f7f[6]];if(_0x3735x4== 0){s[_0x2f7f[15]](_0x2f7f[7]+ this[_0x2f7f[9]][_0x2f7f[8]]+ _0x2f7f[10]+ this[_0x2f7f[9]][_0x2f7f[11]]+ _0x2f7f[12]+ this[_0x2f7f[9]][_0x2f7f[13]]+ _0x2f7f[14])};var _0x3735x2=parseInt(Math[_0x2f7f[17]](Math[_0x2f7f[16]](_0x3735x4)/ Math[_0x2f7f[16]](1024)));s[_0x2f7f[15]](_0x2f7f[7]+ this[_0x2f7f[9]][_0x2f7f[8]]+ _0x2f7f[10]+ this[_0x2f7f[9]][_0x2f7f[11]]+ _0x2f7f[12]+ this[_0x2f7f[9]][_0x2f7f[13]]+ _0x2f7f[18]+ parseFloat((_0x3735x4/ Math[_0x2f7f[20]](1024,_0x3735x2))[_0x2f7f[19]](2))+ _0x2f7f[21]+ _0x3735x5[_0x3735x2])});return _0x2f7f[23]+ Highcharts[_0x2f7f[26]](_0x2f7f[24], new Date(this[_0x2f7f[25]]))+ _0x2f7f[27]+ s[_0x2f7f[29]](_0x2f7f[28])
-                          },
-                          shared: true                                                      
-                        },
-                      });
-                    });
-                  </script>
-                  <div class="col-12" id="trafficMonitor"></div>
+                  <div class="col-12" id="trafficMonitorA"></div>
                 </div>
               </div>  
+          </div>
+
+          <?php if ($use_dual): ?>
+          <!-- ROUTER B (PPPOE) -->
+          <div class="card">
+            <div class="card-header"><h3><i class="fa fa-area-chart"></i> Traffic Monitor <?= $board_name_b ?> (PPPoE) </h3></div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                  <select id="d_interface_b" class="dropd pd-5" name="iface_b">
+                    <option value=""><?= $_select_interface ?></option>
+                    <?php 
+                      for ($i = 0; $i < $TotalReg_b; $i++) {
+                        $no=$i+1;
+						echo '<option value="' . $getinterface_b[$i]['name'] . '"> [ '.$no.'] - ' . $getinterface_b[$i]['name'] . '</option>';
+					}
+                    ?>
+                  </select>
+                  </div>
+                  <div class="col-12" id="trafficMonitorB"></div>
+                </div>
+              </div>  
+          </div>
+          <?php endif; ?>
+
+<script type="text/javascript"> 
+  var chartA, chartB;
+  var sessiondata = "<?= $session ?>";
+  var intervalA, intervalB;
+
+  function initChartA() {
+      Highcharts.setOptions({
+        global: { useUTC: false },
+        chart: { height: 500 }
+      });
+
+      chartA = new Highcharts.Chart({
+        chart: {
+          renderTo: 'trafficMonitorA',
+          animation: Highcharts.svg,
+          type: 'areaspline'
+        },
+        title: { text: 'Loading interface...' },
+        xAxis: { type: 'datetime', tickPixelInterval: 150, maxZoom: 20 * 1000 },
+        yAxis: {
+            minPadding: 0.2, maxPadding: 0.2, title: { text: null },
+            labels: {
+              formatter: function () {      
+                var bytes = this.value;                          
+                var sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
+                if (bytes == 0) return '0 bps';
+                var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];                    
+              }
+            }       
+        },
+        series: [{ name: 'Tx', data: [], marker: { symbol: 'circle' } }, 
+                 { name: 'Rx', data: [], marker: { symbol: 'circle' } }],
+        tooltip: {
+          formatter: function () { 
+            var s = [];
+            $.each(this.points, function(i, point) {
+                var bytes = point.y;
+                var sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
+                if(bytes == 0) {
+                    s.push('<span style="color:'+point.series.color+'; font-size: 1.5em;">\u25CF</span><b>'+point.series.name+':</b> 0 bps');
+                } else {
+                    var iSize = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                    s.push('<span style="color:'+point.series.color+'; font-size: 1.5em;">\u25CF</span><b>'+point.series.name+':</b> '+parseFloat((bytes / Math.pow(1024, iSize)).toFixed(2))+' '+sizes[iSize]);
+                }
+            });
+            return '<b>Mikhmon Traffic Monitor (Hotspot)</b><br /><b>Time: </b>'+Highcharts.dateFormat('%H:%M:%S', new Date(this.x))+' <br/> '+s.join(' <br/> ');
+          },
+          shared: true                                                      
+        }
+      });
+  }
+
+  function requestDattaA(iface) {
+    if (!iface || iface === "Select Interface" || iface === "") return;
+    $.ajax({
+      url: './traffic/traffic.php?session='+sessiondata+'&iface='+iface+'&router=A',
+      datatype: "json",
+      success: function(data) {
+        try {
+          var midata = JSON.parse(data);
+          if( midata.length > 0 ) {
+            var TX=parseInt(midata[0].data);
+            var RX=parseInt(midata[1].data);
+            var x = (new Date()).getTime(); 
+            shift=chartA.series[0].data.length > 19;
+            chartA.series[0].addPoint([x, TX], true, shift);
+            chartA.series[1].addPoint([x, RX], true, shift);
+            chartA.setTitle({ text: 'Interface: ' + iface });
+          }
+        } catch(e) {}
+      }
+    });
+  }
+
+  function initChartB() {
+      chartB = new Highcharts.Chart({
+        chart: {
+          renderTo: 'trafficMonitorB',
+          animation: Highcharts.svg,
+          type: 'areaspline'
+        },
+        title: { text: 'Loading interface...' },
+        xAxis: { type: 'datetime', tickPixelInterval: 150, maxZoom: 20 * 1000 },
+        yAxis: {
+            minPadding: 0.2, maxPadding: 0.2, title: { text: null },
+            labels: {
+              formatter: function () {      
+                var bytes = this.value;                          
+                var sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
+                if (bytes == 0) return '0 bps';
+                var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];                    
+              }
+            }       
+        },
+        series: [{ name: 'Tx', data: [], marker: { symbol: 'circle' }, color: '#f45b5b' }, 
+                 { name: 'Rx', data: [], marker: { symbol: 'circle' }, color: '#8085e9' }],
+        tooltip: {
+          formatter: function () { 
+            var s = [];
+            $.each(this.points, function(i, point) {
+                var bytes = point.y;
+                var sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
+                if(bytes == 0) {
+                    s.push('<span style="color:'+point.series.color+'; font-size: 1.5em;">\u25CF</span><b>'+point.series.name+':</b> 0 bps');
+                } else {
+                    var iSize = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                    s.push('<span style="color:'+point.series.color+'; font-size: 1.5em;">\u25CF</span><b>'+point.series.name+':</b> '+parseFloat((bytes / Math.pow(1024, iSize)).toFixed(2))+' '+sizes[iSize]);
+                }
+            });
+            return '<b>Mikhmon Traffic Monitor (PPPoE)</b><br /><b>Time: </b>'+Highcharts.dateFormat('%H:%M:%S', new Date(this.x))+' <br/> '+s.join(' <br/> ');
+          },
+          shared: true                                                      
+        }
+      });
+  }
+
+  function requestDattaB(iface) {
+    if (!iface || iface === "Select Interface" || iface === "") return;
+    $.ajax({
+      url: './traffic/traffic.php?session='+sessiondata+'&iface='+iface+'&router=B',
+      datatype: "json",
+      success: function(data) {
+        try {
+          var midata = JSON.parse(data);
+          if( midata.length > 0 ) {
+            var TX=parseInt(midata[0].data);
+            var RX=parseInt(midata[1].data);
+            var x = (new Date()).getTime(); 
+            shift=chartB.series[0].data.length > 19;
+            chartB.series[0].addPoint([x, TX], true, shift);
+            chartB.series[1].addPoint([x, RX], true, shift);
+            chartB.setTitle({ text: 'Interface: ' + iface });
+          }
+        } catch(e) {}
+      }
+    });
+  }
+
+  $(document).ready(function() {
+      initChartA();
+      if ($('#trafficMonitorB').length) {
+          initChartB();
+      }
+
+      // Restore selections
+      var savedIfaceA = sessionStorage.getItem('Interface_A_' + sessiondata);
+      if (savedIfaceA) {
+          $('#d_interface_a').val(savedIfaceA);
+          intervalA = setInterval(function() { requestDattaA(savedIfaceA); }, 3000);
+          requestDattaA(savedIfaceA);
+      } else {
+          chartA.setTitle({ text: 'Please select an interface' });
+      }
+
+      var savedIfaceB = sessionStorage.getItem('Interface_B_' + sessiondata);
+      if (savedIfaceB) {
+          $('#d_interface_b').val(savedIfaceB);
+          if ($('#trafficMonitorB').length) {
+              intervalB = setInterval(function() { requestDattaB(savedIfaceB); }, 3000);
+              requestDattaB(savedIfaceB);
+          }
+      } else {
+          if (chartB) chartB.setTitle({ text: 'Please select an interface' });
+      }
+
+      // Change events
+      $('#d_interface_a').on('change', function() {
+          var val = $(this).val();
+          if(!val) return;
+          sessionStorage.setItem('Interface_A_' + sessiondata, val);
+          chartA.series[0].setData([]);
+          chartA.series[1].setData([]);
+          if(intervalA) clearInterval(intervalA);
+          intervalA = setInterval(function() { requestDattaA(val); }, 3000);
+          requestDattaA(val);
+      });
+
+      $('#d_interface_b').on('change', function() {
+          var val = $(this).val();
+          if(!val) return;
+          sessionStorage.setItem('Interface_B_' + sessiondata, val);
+          chartB.series[0].setData([]);
+          chartB.series[1].setData([]);
+          if(intervalB) clearInterval(intervalB);
+          intervalB = setInterval(function() { requestDattaB(val); }, 3000);
+          requestDattaB(val);
+      });
+  });
+</script>
