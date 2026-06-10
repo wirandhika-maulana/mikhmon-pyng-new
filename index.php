@@ -177,7 +177,7 @@ if (!isset($_SESSION["mikhmon"])) {
   $telegrambot=isset($_GET['telegrambot']) ? $_GET['telegrambot'] : '';
 
   $pagehotspot = array('users','hosts','ipbinding','cookies','log','dhcp-leases');
-  $pageppp = array('secrets','profiles','active','addsecret','billing','history');
+  $pageppp = array('secrets','profiles','active','nonactive','addsecret','billing','history');
   $pagereport = array('userlog','selling');
 //  $hbilling = array('billing');
   include_once('./include/headhtml.php');
@@ -668,21 +668,7 @@ if ($hotspot == "dashboard" || substr(end(explode("/", $url)), 0, 8) == "?sessio
   }
 </script>';
 
-} elseif ($hotspot == "active" && $serveractive != "") {
-  // Auto-refresh removed to prevent router log flooding
-} elseif ($hotspot == "active" && $serveractive == "") {
-  // Auto-refresh removed to prevent router log flooding
-} elseif ($ppp == "active" ) {
-  // Auto-refresh removed to prevent router log flooding
-} elseif ($ppp == "nonactive" ) {
-  // Auto-refresh removed to prevent router log flooding
 
-} elseif ($minterface == "netwatch" ) {
-  // Auto-refresh removed
-} elseif ($minterface == "netwatchup" ) {
-  // Auto-refresh removed
-} elseif ($minterface == "netwatchdown" ) {
-  // Auto-refresh removed
 } elseif ($userprofile == "add" || substr($userprofile, 0, 1) == "*" || $userprofile != "") {
   echo "<script>
   //enable disable input on ready

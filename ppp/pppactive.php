@@ -81,6 +81,11 @@ if (!isset($_SESSION["mikhmon"])) {
 				</h3>
 			</div>
 			<div class="card-body overflow">
+				<div class="input-group">
+					<div class="input-group-3 col-box-3">
+						<input id="filterTable" type="text" style="padding:5.8px;" class="group-item group-item-l" placeholder="Search...">
+					</div>
+				</div>
 				<br>
 				<table id="dataTable" class="table table-bordered table-hover text-nowrap">
 					<thead>

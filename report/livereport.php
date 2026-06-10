@@ -120,7 +120,7 @@ include('../lang/'.$langid.'.php');
                             $_SESSION[$session.'dincome'] = $dincome;
                             $_SESSION[$session.'mincome'] = $mincome;
                           }
-                            echo $_income."<br/>" . "
+                            echo $_income." Hotspot<br/>" . "
                           ".$_today." " . $TotalRHr . "vcr : " . $currency . " " . $dincome . "<br/>
                           ".$_this_month." " . $TotalRBl . "vcr : " . $currency . " " . $mincome;
                           ?>

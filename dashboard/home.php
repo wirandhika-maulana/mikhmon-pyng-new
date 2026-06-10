@@ -126,19 +126,48 @@ if (!isset($_SESSION["mikhmon"])) {
         $uunit = "items";
     }
 
-    // get & counting ppp secrets
-    $countsecrets = $API_FOR_PPP->comm("/ppp/secret/print", array("count-only" => ""));
-    if ($countsecrets < 2) {
-        $hunit = "item";
-    } elseif ($countsecrets > 1) {
-        $hunit = "items";
+    // get ppp active
+    $getactive = $API_FOR_PPP->comm("/ppp/active/print", array(".proplist" => "name"));
+    $countpppactive = is_array($getactive) ? count($getactive) : 0;
+    $active_names = [];
+    if (is_array($getactive)) {
+        foreach ($getactive as $act) {
+            $active_names[] = $act['name'];
+        }
     }
 
-    // get & counting ppp active
-    $countpppactive = $API_FOR_PPP->comm("/ppp/active/print", array("count-only" => ""));
     if ($countpppactive < 2) {
         $hunit = "item";
     } elseif ($countpppactive > 1) {
+        $hunit = "items";
+    }
+
+    // get & counting ppp secrets and calculate income
+    $getsecrets = $API_FOR_PPP->comm("/ppp/secret/print", array(".proplist" => "name,profile"));
+    $countsecrets = is_array($getsecrets) ? count($getsecrets) : 0;
+    
+    $pppoe_income = 0;
+    if (is_array($getsecrets)) {
+        foreach ($getsecrets as $sec) {
+            // Only calculate if user is active
+            if (in_array($sec['name'], $active_names)) {
+                $profUpper = strtoupper($sec['profile']);
+                if (strpos($profUpper, 'BRONZE') !== false) {
+                    $pppoe_income += 120000;
+                } elseif (strpos($profUpper, 'SILVER') !== false) {
+                    $pppoe_income += 150000;
+                } elseif (strpos($profUpper, 'GOLD') !== false) {
+                    $pppoe_income += 170000;
+                } elseif (strpos($profUpper, 'DIAMOND') !== false) {
+                    $pppoe_income += 200000;
+                }
+            }
+        }
+    }
+    
+    if ($countsecrets < 2) {
+        $hunit = "item";
+    } elseif ($countsecrets > 1) {
         $hunit = "items";
     }
 
@@ -150,9 +179,9 @@ if (!isset($_SESSION["mikhmon"])) {
         $hunit = "items";
     }
 
-    if ($ppp_connected) {
-        $API_PPP->disconnect();
-    }
+    // if ($ppp_connected) {
+    //     $API_PPP->disconnect();
+    // }
 
 /*
 // get selling report
@@ -374,6 +403,8 @@ if (!isset($_SESSION["mikhmon"])) {
 							</div>
 						</div>
 						
+
+						
 					</div>
 				</div>
 			</div>           
@@ -392,7 +423,7 @@ if (!isset($_SESSION["mikhmon"])) {
 
               <div class="card-body">
   
-                  <?php $getinterface = $API->comm("/interface/print");
+                  <?php $getinterface = $API_FOR_PPP->comm("/interface/print");
                   $interface = $getinterface[$iface - 1]['name']; 
                   /*$TotalReg = count($getinterface);
                   for ($i = 0; $i < $TotalReg; $i++) {
@@ -415,7 +446,7 @@ if (!isset($_SESSION["mikhmon"])) {
                         // Then interval
                         trafficInterval = setInterval(function () {
                             requestDatta(sessiondata,interface);
-                        }, 8000);
+                        }, n);
                     }
 
                     function stopTraffic() {
@@ -563,7 +594,7 @@ if (!isset($_SESSION["mikhmon"])) {
                         <div id="reloadLreport">
                           <?php 
                           if ($_SESSION[$session.'sdate'] == $_SESSION[$session.'idhr']){
-                            echo $_income." <br/>" . "
+                            echo $_income." Hotspot<br/>" . "
                           ".$_today." " . $_SESSION[$session.'totalHr'] . "vcr : " . $currency . " " . $_SESSION[$session.'dincome']. "<br/>
                           ".$_this_month." " . $_SESSION[$session.'totalBl'] . "vcr : " . $currency . " " . $_SESSION[$session.'mincome']; 
                           }else{

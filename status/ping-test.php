@@ -70,6 +70,25 @@ function ping($host,$port){
 }
 
 $ping_test = ping($host,$port);
-print_r($ping_test);
+$ping_test = str_replace('Ping Test [', 'Ping Test Mikrotik (Hotspot) [', $ping_test);
+
+$dr_ping_test = "";
+if (file_exists('../include/dual_router_config.php')) {
+    include('../include/dual_router_config.php');
+    if (isset($dual_router[$session]) && !empty($dual_router[$session]['ip'])) {
+        $dr_ip = $dual_router[$session]['ip'];
+        $dr_host = explode(":", $dr_ip)[0];
+        $dr_port = explode(":", $dr_ip)[1];
+        if (empty($dr_port)) {
+            $dr_port = 8728;
+        }
+        // Change title slightly by replacing "Ping Test" with "Ping Test Mikrotik (PPPoE)"
+        $dr_ping = ping($dr_host, $dr_port);
+        $dr_ping = str_replace('Ping Test [', 'Ping Test Mikrotik (PPPoE) [', $dr_ping);
+        $dr_ping_test = $dr_ping;
+    }
+}
+
+print_r($ping_test . $dr_ping_test);
 }
 }

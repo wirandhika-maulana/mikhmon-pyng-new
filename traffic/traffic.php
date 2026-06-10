@@ -35,10 +35,24 @@ include_once('../lib/formatbytesbites.php');
 $API = new RouterosAPI();
 $API->debug = false;
   
-  if($API->connect( $iphost, $userhost, decrypt($passwdhost))){
+  $use_dual_router = false;
+  if (file_exists('../include/dual_router_config.php')) {
+      include('../include/dual_router_config.php');
+      if (isset($dual_router[$session])) {
+          $use_dual_router = true;
+          $dr_ip = $dual_router[$session]['ip'];
+          $dr_user = $dual_router[$session]['user'];
+          $dr_pass = $dual_router[$session]['pass'];
+      }
+  }
 
-//$getinterface = $API->comm("/interface/print");
-    //$interface = $getinterface[$iface-1]['name'];
+  if ($use_dual_router) {
+      $connected = $API->connect($dr_ip, $dr_user, decrypt($dr_pass));
+  } else {
+      $connected = $API->connect($iphost, $userhost, decrypt($passwdhost));
+  }
+
+  if($connected){
     $getinterfacetraffic = $API->comm("/interface/monitor-traffic", array(
       "interface" => "$interface",
       "once" => "",
