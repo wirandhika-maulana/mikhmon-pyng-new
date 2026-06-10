@@ -77,7 +77,7 @@ if (!isset($_SESSION["mikhmon"])) {
 	} elseif ($minterface == "traffic-monitor") {
 		$moni = "menu-open";
 		$mpage = $_traffic_monitor;  
-		$strafficmonitor1 = "active";
+		$strafficmonitor = "active";
 		
 	} elseif ($minterface == "netwatch" ) {
 		$moni = "menu-open";

@@ -402,7 +402,7 @@ date_default_timezone_set($_SESSION['timezone']);
 
 .gen-header-text h3 {
     margin: 0;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     color: #fff;
     letter-spacing: -0.3px;
