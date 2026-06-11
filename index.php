@@ -646,7 +646,8 @@ elseif ($ppp == "edit-profile") {
 <script src="./js/mikhmon.js?t=<?= str_replace(" ","_",date("Y-m-d H:i:s")); ?>"></script>
 
 <?php
-if ($hotspot == "dashboard" || substr(end(explode("/", $url)), 0, 8) == "?session") {
+$url_parts = explode("/", $url);
+if ($hotspot == "dashboard" || substr(end($url_parts), 0, 8) == "?session") {
 	echo '<script>
 		$("#r_3").load("./dashboard/aload.php?session=' . $session . '&load=logs #r_3");  
 		// Auto-refresh removed to prevent router log flooding

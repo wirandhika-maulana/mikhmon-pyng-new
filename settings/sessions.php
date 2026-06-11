@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var string $useradm
+ * @var string $passadm
+ * @var array $data
+ * @var array $color
+ */
 /*
  *  Copyright (C) 2018 Laksamadi Guko.
  *
@@ -122,18 +128,18 @@ if (!isset($_SESSION["mikhmon"])) {
                 <div class="card-body">
                   <table class="table table-sm">
                     <tr>
-                      <td class="align-middle"><?= $_user_name ?> </td><td><input class="form-control" id="useradm" type="text" size="10" name="useradm" title="User Admin" value="<?= $useradm; ?>" required="1" /></td>
+                      <td class="align-middle"><?php echo $_user_name; ?> </td><td><input class="form-control" id="useradm" type="text" size="10" name="useradm" title="User Admin" value="<?php echo $useradm; ?>" required="1" /></td>
                   </tr>
                   <tr>
                     <td class="align-middle"><?= $_password ?> </td>
                     <td>
                       <div class="input-group">
                         <div class="input-group-11 col-box-10">
-                          <input class="group-item group-item-l" id="passadm" type="password" size="10" name="passadm" title="Password Admin" value="<?= decrypt($passadm); ?>" required="1" />
+                          <input class="group-item group-item-l" id="passadm" type="password" size="10" name="passadm" title="Password Admin" value="<?php echo decrypt($passadm); ?>" required="1" />
                       </div>
                       <div class="input-group-1 col-box-2">
                         <div class="group-item group-item-r pd-2p5 text-center align-middle">
-                          <input title="Show/Hide Password" type="checkbox" onclick="Pass('passadm')">
+                          <input title="Show/Hide Password" type="checkbox" onclick='Pass("passadm");'>
                         </div>
                       </div>
                     </div>
