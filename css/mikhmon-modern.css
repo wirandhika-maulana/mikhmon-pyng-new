@@ -763,18 +763,7 @@ a:hover {
 /* ================================================
    19. FILTER / SEARCH INPUT ENHANCEMENT
    ================================================ */
-#filterTable {
-  border-radius: 20px !important;
-  padding: 8px 16px !important;
-  border: 2px solid rgba(128, 128, 128, 0.15) !important;
-  transition: all 0.3s ease !important;
-  font-size: 13px;
-}
-
-#filterTable:focus {
-  border-color: #20a8d8 !important;
-  box-shadow: 0 0 0 3px rgba(32, 168, 216, 0.15) !important;
-}
+/* Filter table specific styles removed to prevent breaking .group-item layouts */
 
 /* ================================================
    20. OVERFLOW TABLE CONTAINER
